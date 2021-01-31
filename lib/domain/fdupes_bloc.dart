@@ -11,22 +11,13 @@ part 'fdupes_event.dart';
 part 'fdupes_state.dart';
 
 class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
-  var dupes = [
-    [
-      'dupe1a',
-      'dupe1b',
-      'dupe1c',
-      'dupe1d',
-    ],
-    [
-      'dupe2a',
-      'dupe2b',
-      'dupe2c',
-    ]
-  ];
+  List<List<String>> dupes = [];
+  int selectedDupe;
   var fdupesFound;
 
-  FdupesBloc() : super(FdupesStateResult([]));
+  String dir;
+
+  FdupesBloc() : super(FdupesStateInitial());
 
   @override
   Stream<FdupesState> mapEventToState(
@@ -39,16 +30,35 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
         fdupesFound = fdupesPath != null;
       }
       if (!fdupesFound) {
-        yield FdupesStateResult(dupes);
+        yield FdupesStateResult(event.dir, dupes);
         return;
       }
 
+      dir = event.dir;
       dupes = await findDupes(event.dir);
 
-      yield FdupesStateResult(dupes);
+      yield FdupesStateResult(dir, dupes);
     }
     if (event is FdupesEventDupeSelected) {
-      yield FdupesStateResult(dupes, selectedDupe: event.index);
+      selectedDupe = event.index;
+      yield FdupesStateResult(dir, dupes, selectedDupe: event.index);
+    }
+    if (event is FdupesEventDeleteDupeInstance) {
+      var file = File(event.filename);
+      try {
+        print("deleting $file");
+        file.deleteSync();
+        dupes.forEach((dupeList) { dupeList.remove(event.filename);});
+        dupes.removeWhere((dupeList) => dupeList.length == 1);
+        if (dupes.isEmpty) {
+          selectedDupe = null;
+        } else {
+          selectedDupe %= dupes.length;
+        }
+        yield FdupesStateResult(dir, dupes, selectedDupe: selectedDupe);
+      } catch (exc) {
+        yield FdupesStateError(dir, "failed to delete file ${event.filename}: $exc");
+      }
     }
   }
 

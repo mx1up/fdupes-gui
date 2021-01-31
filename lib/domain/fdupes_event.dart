@@ -4,6 +4,12 @@ part of 'fdupes_bloc.dart';
 abstract class FdupesEvent {}
 
 
+class FdupesEventDeleteDupeInstance extends FdupesEvent {
+  final String filename;
+
+  FdupesEventDeleteDupeInstance(this.filename);
+}
+
 class FdupesEventDirSelected extends FdupesEvent {
   final String dir;
 

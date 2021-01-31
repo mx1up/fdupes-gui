@@ -1,17 +1,25 @@
 part of 'fdupes_bloc.dart';
 
 @immutable
-abstract class FdupesState {}
+abstract class FdupesState {
+  final String dir;
 
-class FdupesStateInitial extends FdupesState {}
+  FdupesState(this.dir);
+}
+
+class FdupesStateInitial extends FdupesState {
+
+  FdupesStateInitial() : super(/*Platform.environment['HOME']*/"/home/matthias/Music/");
+}
+
 class FdupesStateError extends FdupesState {
   final String msg;
 
-  FdupesStateError(this.msg);
+  FdupesStateError(String dir, this.msg) : super(dir);
 }
 class FdupesStateResult extends FdupesState {
   List<List<String>> dupes;
   int selectedDupe;
 
-  FdupesStateResult(this.dupes, {this.selectedDupe});
+  FdupesStateResult(String dir, this.dupes, {this.selectedDupe}) : super(dir);
 }
