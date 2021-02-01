@@ -69,6 +69,13 @@ class DupeScreen extends StatelessWidget {
       child: Row(
         children: [
           Text(dupeFilename),
+          InkWell(
+            child: Icon(Icons.edit),
+            onTap: () async {
+              String newFilename = await showDialog(context: context, builder: (context) => AddTaskDialog(dupeFilename),);
+              BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
+            },
+          ),
           if (showTrash)
             InkWell(
               child: Icon(Icons.delete),
@@ -92,5 +99,52 @@ class DupeScreen extends StatelessWidget {
   openFile(String dup) async {
     OpenResult result = await OpenFile.open(dup);
     print(result);
+  }
+}
+
+class AddTaskDialog extends StatefulWidget {
+  final String filename;
+
+  AddTaskDialog(this.filename);
+
+  @override
+  _AddTaskDialogState createState() => _AddTaskDialogState();
+}
+
+class _AddTaskDialogState extends State<AddTaskDialog> {
+  TextEditingController _filenameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _filenameController = TextEditingController(text: widget.filename);
+  }
+
+  @override
+  void dispose() {
+    _filenameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Edit filename'),
+      content: Row(
+        children: [
+          Text('new filename:'),
+          Expanded(
+              child: TextField(
+            controller: _filenameController,
+          )),
+        ],
+      ),
+      actions: <Widget>[
+        FlatButton(child: Text('Rename'),
+            onPressed: () {
+              Navigator.pop(context, _filenameController.text);
+            }),
+      ],
+    );
   }
 }

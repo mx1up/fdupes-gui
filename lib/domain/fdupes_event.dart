@@ -10,6 +10,13 @@ class FdupesEventDeleteDupeInstance extends FdupesEvent {
   FdupesEventDeleteDupeInstance(this.filename);
 }
 
+class FdupesEventRenameDupeInstance extends FdupesEvent {
+  final String filename;
+  final String newFilename;
+
+  FdupesEventRenameDupeInstance(this.filename, this.newFilename);
+}
+
 class FdupesEventDirSelected extends FdupesEvent {
   final String dir;
 

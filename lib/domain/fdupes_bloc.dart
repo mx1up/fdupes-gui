@@ -60,6 +60,21 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
         yield FdupesStateError(dir, "failed to delete file ${event.filename}: $exc");
       }
     }
+    if (event is FdupesEventRenameDupeInstance) {
+      print('rename ${event.filename} to ${event.newFilename}');
+      try {
+        var file = File(event.filename);
+        if (await File(event.newFilename).exists()) {
+          print('cancel rename, target already exists: ${event.newFilename}');
+          return;
+        }
+        await file.rename(event.newFilename);
+        //todo rename entries in cache instead of rededupe
+        add(FdupesEventDirSelected(dir));
+      } catch (exc) {
+        yield FdupesStateError(dir, "failed to rename file ${event.filename}: $exc");
+      }
+    }
   }
 
   Future<List<List<String>>> findDupes(String dir) async {
