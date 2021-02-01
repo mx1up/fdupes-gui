@@ -33,7 +33,10 @@ dependencies:
       ref: refs/heads/master
   flutter_bloc: ^6.1.1
   url_launcher: ^5.7.10
-  open_file: ^3.0.3
+  open_file:
+    git:
+      url: https://github.com/mx1up/open_file.git
+      ref: refs/heads/filenames-with-spaces
 
 dev_dependencies:
   flutter_test:

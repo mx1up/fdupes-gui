@@ -168,9 +168,11 @@ packages:
   open_file:
     dependency: "direct main"
     description:
-      name: open_file
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "refs/heads/filenames-with-spaces"
+      resolved-ref: f80b41b0f8aa5125d5047b76eb8ee3767c176195
+      url: "https://github.com/mx1up/open_file.git"
+    source: git
     version: "3.0.3"
   path:
     dependency: transitive
