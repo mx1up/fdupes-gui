@@ -1,3 +1,4 @@
+import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,8 +23,12 @@ class DupeScreen extends StatelessWidget {
               Expanded(child: Text(state.dir)),
                   RaisedButton(
                     child: Text('Select folder'),
-                    onPressed: () async => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(await FileSelectorPlatform.instance
-                        .getDirectoryPath(initialDirectory: '/home/matthias', confirmButtonText: 'Select'))),
+                    onPressed: () async {
+                      var dir = await FileSelectorPlatform.instance.getDirectoryPath(initialDirectory: state.dir ?? util.userHome, confirmButtonText: 'Select');
+                      if (dir != null) {
+                        BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(dir));
+                      }
+                    },
                   ),
                 ]),
                 if (state is FdupesStateResult)

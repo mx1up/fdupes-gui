@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:meta/meta.dart';
 import 'package:process_run/which.dart';
 

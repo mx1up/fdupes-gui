@@ -9,7 +9,7 @@ abstract class FdupesState {
 
 class FdupesStateInitial extends FdupesState {
 
-  FdupesStateInitial() : super(/*Platform.environment['HOME']*/"/home/matthias/Music/");
+  FdupesStateInitial() : super(util.userHome + '/Music');
 }
 
 class FdupesStateError extends FdupesState {
