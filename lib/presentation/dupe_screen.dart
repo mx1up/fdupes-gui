@@ -31,9 +31,11 @@ class DupeScreen extends StatelessWidget {
                     },
                   ),
                 ]),
+                if (state is FdupesStateInitial)
+                    Text('Select dir'),
                 if (state is FdupesStateResult)
                   if (state.dupes.isEmpty)
-                    Text('Select dir')
+                    Text('no dupes found')
                   else
                     showFileTree(context, state),
                 if (state is FdupesStateError)
