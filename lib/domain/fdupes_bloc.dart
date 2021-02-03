@@ -30,7 +30,7 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
         fdupesFound = fdupesPath != null;
       }
       if (!fdupesFound) {
-        yield FdupesStateResult(event.dir, dupes);
+        yield FdupesStateError(event.dir, "fdupes not found");
         return;
       }
 
