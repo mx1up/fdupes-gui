@@ -72,27 +72,27 @@ class DupeScreen extends StatelessWidget {
   }
 
   Widget createDupeInstanceWidget(BuildContext context, String dupeFilename, bool showTrash) {
-    return InkWell(
-      child: Row(
-        children: [
+    return Row(
+      children: [
+        InkWell(
+          child: Icon(Icons.edit),
+          onTap: () async {
+            String newFilename = await showDialog(context: context, builder: (context) => AddTaskDialog(dupeFilename),);
+            if (newFilename != null) {
+              BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
+            }
+          },
+        ),
+        InkWell(
+          onTap: () => openFile(dupeFilename),
+            child: Text(dupeFilename),
+        ),
+        if (showTrash)
           InkWell(
-            child: Icon(Icons.edit),
-            onTap: () async {
-              String newFilename = await showDialog(context: context, builder: (context) => AddTaskDialog(dupeFilename),);
-              if (newFilename != null) {
-                BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
-              }
-            },
-          ),
-          Text(dupeFilename),
-          if (showTrash)
-            InkWell(
-              child: Icon(Icons.delete),
-              onTap: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDeleteDupeInstance(dupeFilename)),
-            )
-        ],
-      ),
-      onTap: () => openFile(dupeFilename),
+            child: Icon(Icons.delete),
+            onTap: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDeleteDupeInstance(dupeFilename)),
+          )
+      ],
     );
   }
 
