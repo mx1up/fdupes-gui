@@ -70,8 +70,11 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
           return;
         }
         await file.rename(event.newFilename);
-        //todo rename entries in cache instead of rededupe
-        add(FdupesEventDirSelected(dir));
+        var dupeGroup = dupes.firstWhere((element) => element.contains(event.filename));
+        dupeGroup.remove(event.filename);
+        dupeGroup.add(event.newFilename);
+
+        yield FdupesStateResult(dir, dupes, selectedDupe: selectedDupe);
       } catch (exc) {
         yield FdupesStateError(dir, "failed to rename file ${event.filename}: $exc");
       }
