@@ -80,7 +80,9 @@ class DupeScreen extends StatelessWidget {
             child: Icon(Icons.edit),
             onTap: () async {
               String newFilename = await showDialog(context: context, builder: (context) => AddTaskDialog(dupeFilename),);
-              BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
+              if (newFilename != null) {
+                BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
+              }
             },
           ),
           if (showTrash)
