@@ -56,8 +56,12 @@ class DupeScreen extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) => InkWell(
-                onTap: () =>  BlocProvider.of<FdupesBloc>(context).add(FdupesEventDupeSelected(index)),
-                  child: Text(path.relative(state.dupes[index][0], from: state.dir))),
+                onTap: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDupeSelected(index)),
+                child: Container(
+                  color: isSelectedItem(state, index) ? Colors.black26 : null,
+                  child: Text(path.relative(state.dupes[index][0], from: state.dir)),
+                ),
+              ),
               itemCount: state.dupes.length,
             ),
           ),
@@ -74,6 +78,8 @@ class DupeScreen extends StatelessWidget {
       ),
     );
   }
+
+  bool isSelectedItem(FdupesStateResult state, int index) => state.dupes[index] == state.dupes[state.selectedDupe];
 
   Widget createDupeInstanceWidget(BuildContext context, String baseDir, String dupeFilename, bool showTrash, bool showFullPath) {
     return Row(
