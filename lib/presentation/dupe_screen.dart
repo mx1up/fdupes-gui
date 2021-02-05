@@ -57,14 +57,16 @@ class DupeScreen extends StatelessWidget {
             child: ListView.builder(
               itemBuilder: (context, index) => InkWell(
                 onTap: () =>  BlocProvider.of<FdupesBloc>(context).add(FdupesEventDupeSelected(index)),
-                  child: Text(state.dupes[index][0])),
+                  child: Text(path.relative(state.dupes[index][0], from: state.dir))),
               itemCount: state.dupes.length,
             ),
           ),
           if (state.selectedDupe != null ) Expanded(
             child: ListView.builder(
                 itemBuilder: (context, index) => createDupeInstanceWidget(
-                    context, state.dupes[state.selectedDupe][index], state.dupes[state.selectedDupe].length > 1),
+                    context, state.dir, state.dupes[state.selectedDupe][index], state.dupes[state.selectedDupe].length > 1,
+                  state.dupes[state.selectedDupe].map((e) => path.dirname(e)).toSet().length != 1
+                ),
                 itemCount: state.dupes[state.selectedDupe].length,
             ),
           ),
@@ -73,7 +75,7 @@ class DupeScreen extends StatelessWidget {
     );
   }
 
-  Widget createDupeInstanceWidget(BuildContext context, String dupeFilename, bool showTrash) {
+  Widget createDupeInstanceWidget(BuildContext context, String baseDir, String dupeFilename, bool showTrash, bool showFullPath) {
     return Row(
       children: [
         InkWell(
@@ -91,7 +93,7 @@ class DupeScreen extends StatelessWidget {
         ),
         InkWell(
           onTap: () => openFile(dupeFilename),
-            child: Text(dupeFilename),
+            child: Tooltip(child: Text(showFullPath ? path.relative(dupeFilename, from: baseDir) : path.basename(dupeFilename)), message: dupeFilename,),
         ),
         if (showTrash)
           InkWell(
