@@ -37,6 +37,7 @@ dependencies:
     git:
       url: https://github.com/mx1up/open_file.git
       ref: refs/heads/filenames-with-spaces
+  path: ^1.7.0
 
 dev_dependencies:
   flutter_test:

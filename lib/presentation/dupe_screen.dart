@@ -1,10 +1,12 @@
+
 import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
+import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as path;
 import 'package:url_launcher/url_launcher.dart';
 
 class DupeScreen extends StatelessWidget {
@@ -77,8 +79,12 @@ class DupeScreen extends StatelessWidget {
         InkWell(
           child: Icon(Icons.edit),
           onTap: () async {
-            String newFilename = await showDialog(context: context, builder: (context) => AddTaskDialog(dupeFilename),);
-            if (newFilename != null) {
+            String newFilename = await FileSelectorPlatform.instance.getSavePath(
+              initialDirectory: path.dirname(dupeFilename),
+              suggestedName: path.basename(dupeFilename),
+              confirmButtonText: "Rename",
+            );
+            if (newFilename != null && newFilename != dupeFilename) {
               BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
             }
           },
