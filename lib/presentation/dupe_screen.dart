@@ -75,7 +75,6 @@ class DupeScreen extends StatelessWidget {
     return InkWell(
       child: Row(
         children: [
-          Text(dupeFilename),
           InkWell(
             child: Icon(Icons.edit),
             onTap: () async {
@@ -85,6 +84,7 @@ class DupeScreen extends StatelessWidget {
               }
             },
           ),
+          Text(dupeFilename),
           if (showTrash)
             InkWell(
               child: Icon(Icons.delete),
