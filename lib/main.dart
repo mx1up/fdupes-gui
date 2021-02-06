@@ -5,6 +5,7 @@ import 'package:fdupes_gui/presentation/dupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:process_run/which.dart';
+import 'package:fdupes_gui/core/util.dart' as util;
 
 class MyBlocObserver extends BlocObserver {
   @override
@@ -32,20 +33,29 @@ class MyBlocObserver extends BlocObserver {
   }
 }
 
-void main() {
+void main(List<String> args) {
+  var initialDir = util.userHome;
+  if (args.length > 0) {
+    initialDir = args[0];
+  }
+  print('initialDir=$initialDir');
   Bloc.observer = MyBlocObserver();
 
 
 
-  runApp(MyApp());
+  runApp(MyApp(initialDir));
 }
 
 class MyApp extends StatelessWidget {
+  final String initialDir;
+
+  MyApp(this.initialDir);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FdupesBloc>(
-      create: (context) => FdupesBloc(),
+      create: (context) => FdupesBloc(initialDir),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

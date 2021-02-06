@@ -9,7 +9,7 @@ abstract class FdupesState {
 
 class FdupesStateInitial extends FdupesState {
 
-  FdupesStateInitial() : super(util.userHome);
+  FdupesStateInitial(String initialDir) : super(initialDir);
 }
 
 class FdupesStateError extends FdupesState {

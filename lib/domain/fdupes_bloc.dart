@@ -18,7 +18,7 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
 
   String dir;
 
-  FdupesBloc() : super(FdupesStateInitial());
+  FdupesBloc(String initialDir) : super(FdupesStateInitial(initialDir));
 
   @override
   Stream<FdupesState> mapEventToState(
