@@ -9,7 +9,7 @@ abstract class FdupesState {
 
 class FdupesStateInitial extends FdupesState {
 
-  FdupesStateInitial() : super(util.userHome + '/Music');
+  FdupesStateInitial() : super(util.userHome);
 }
 
 class FdupesStateError extends FdupesState {
