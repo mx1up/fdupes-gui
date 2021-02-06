@@ -79,7 +79,7 @@ class DupeScreen extends StatelessWidget {
     );
   }
 
-  bool isSelectedItem(FdupesStateResult state, int index) => state.dupes[index] == state.dupes[state.selectedDupe];
+  bool isSelectedItem(FdupesStateResult state, int index) => state.selectedDupe != null && state.dupes[index] == state.dupes[state.selectedDupe];
 
   Widget createDupeInstanceWidget(BuildContext context, String baseDir, String dupeFilename, bool showTrash, bool showFullPath) {
     return Row(
