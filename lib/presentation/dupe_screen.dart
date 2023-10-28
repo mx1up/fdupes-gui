@@ -122,11 +122,13 @@ class DupeScreen extends StatelessWidget {
             }
           },
         ),
-        InkWell(
-          onTap: () => openFile(dupeFilepath),
-          child: Tooltip(
-            child: Text(showFullPath ? path.relative(dupeFilepath, from: baseDir) : path.basename(dupeFilepath)),
-            message: dupeFilepath,
+        Expanded(
+          child: InkWell(
+            onTap: () => openFile(dupeFilepath),
+            child: Tooltip(
+              child: Text(showFullPath ? path.relative(dupeFilepath, from: baseDir) : path.basename(dupeFilepath)),
+              message: dupeFilepath,
+            ),
           ),
         ),
         if (showTrash)
