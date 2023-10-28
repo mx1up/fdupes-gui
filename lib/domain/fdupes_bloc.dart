@@ -13,38 +13,33 @@ part 'fdupes_state.dart';
 
 class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   List<List<String>> dupes = [];
-  int selectedDupe;
+  int? selectedDupe;
   var fdupesFound;
 
-  String dir;
+  String dir = '';
 
-  FdupesBloc(String initialDir) : super(FdupesStateInitial(initialDir));
-
-  @override
-  Stream<FdupesState> mapEventToState(
-    FdupesEvent event,
-  ) async* {
-    if (event is FdupesEventDirSelected) {
+  FdupesBloc(String initialDir) : super(FdupesStateInitial(initialDir)) {
+    on<FdupesEventDirSelected>((event, emit) async {
       if (fdupesFound == null) {
         var fdupesPath = await which('fdupes');
         print("fdupes = $fdupesPath");
         fdupesFound = fdupesPath != null;
       }
       if (!fdupesFound) {
-        yield FdupesStateError(event.dir, "fdupes not found");
+        emit(FdupesStateError(event.dir, "fdupes not found"));
         return;
       }
 
       dir = event.dir;
       dupes = await findDupes(event.dir);
 
-      yield FdupesStateResult(dir, dupes);
-    }
-    if (event is FdupesEventDupeSelected) {
+      emit(FdupesStateResult(dir, dupes));
+    });
+    on<FdupesEventDupeSelected>((event, emit) {
       selectedDupe = event.index;
-      yield FdupesStateResult(dir, dupes, selectedDupe: event.index);
-    }
-    if (event is FdupesEventDeleteDupeInstance) {
+      emit(FdupesStateResult(dir, dupes, selectedDupe: event.index));
+    });
+    on<FdupesEventDeleteDupeInstance>((event, emit) {
       var file = File(event.filename);
       try {
         print("deleting $file");
@@ -53,32 +48,34 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
         dupes.removeWhere((dupeList) => dupeList.length == 1);
         if (dupes.isEmpty) {
           selectedDupe = null;
-        } else {
-          selectedDupe %= dupes.length;
+        } else if (selectedDupe != null) {
+          //todo what's going on here
+          selectedDupe = selectedDupe! % dupes.length;
         }
-        yield FdupesStateResult(dir, dupes, selectedDupe: selectedDupe);
+        emit(FdupesStateResult(dir, dupes, selectedDupe: selectedDupe));
       } catch (exc) {
-        yield FdupesStateError(dir, "failed to delete file ${event.filename}: $exc");
+        emit(FdupesStateError(dir, "failed to delete file ${event.filename}: $exc"));
       }
-    }
-    if (event is FdupesEventRenameDupeInstance) {
+
+    },);
+    on<FdupesEventRenameDupeInstance>((event, emit) async {
       print('rename ${event.filename} to ${event.newFilename}');
       try {
         var file = File(event.filename);
         if (await File(event.newFilename).exists()) {
-          print('cancel rename, target already exists: ${event.newFilename}');
-          return;
-        }
-        await file.rename(event.newFilename);
-        var dupeGroup = dupes.firstWhere((element) => element.contains(event.filename));
-        dupeGroup.remove(event.filename);
-        dupeGroup.add(event.newFilename);
-
-        yield FdupesStateResult(dir, dupes, selectedDupe: selectedDupe);
-      } catch (exc) {
-        yield FdupesStateError(dir, "failed to rename file ${event.filename}: $exc");
+      print('cancel rename, target already exists: ${event.newFilename}');
+      return;
       }
-    }
+      await file.rename(event.newFilename);
+      var dupeGroup = dupes.firstWhere((element) => element.contains(event.filename));
+      dupeGroup.remove(event.filename);
+      dupeGroup.add(event.newFilename);
+
+      emit(FdupesStateResult(dir, dupes, selectedDupe: selectedDupe));
+      } catch (exc) {
+      emit(FdupesStateError(dir, "failed to rename file ${event.filename}: $exc"));
+      }
+    },);
   }
 
   Future<List<List<String>>> findDupes(String dir) async {

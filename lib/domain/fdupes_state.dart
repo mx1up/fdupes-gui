@@ -19,7 +19,8 @@ class FdupesStateError extends FdupesState {
 }
 class FdupesStateResult extends FdupesState {
   List<List<String>> dupes;
-  int selectedDupe;
+  //todo review nullability
+  int? selectedDupe;
 
   FdupesStateResult(String dir, this.dupes, {this.selectedDupe}) : super(dir);
 }

@@ -8,14 +8,15 @@ import 'package:process_run/which.dart';
 import 'package:fdupes_gui/core/util.dart' as util;
 
 class MyBlocObserver extends BlocObserver {
+
   @override
-  void onChange(Cubit cubit, Change change) {
+  void onChange(BlocBase cubit, Change change) {
     print('${cubit.runtimeType}.onChange: $change');
     super.onChange(cubit, change);
   }
 
   @override
-  void onError(Cubit cubit, Object error, StackTrace stackTrace) {
+  void onError(BlocBase cubit, Object error, StackTrace stackTrace) {
     print("${cubit.runtimeType}.onError: $error");
     super.onError(cubit, error, stackTrace);
   }
@@ -27,7 +28,7 @@ class MyBlocObserver extends BlocObserver {
   }
 
   @override
-  void onEvent(Bloc bloc, Object event) {
+  void onEvent(Bloc bloc, Object? event) {
     print("${bloc.runtimeType}.onEvent: $event");
     super.onEvent(bloc, event);
   }

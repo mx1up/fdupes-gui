@@ -18,12 +18,12 @@ class DupeScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Row(children: [
-              RaisedButton(
+              ElevatedButton(
                 child: Icon(Icons.refresh),
                 onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(state.dir)),
               ),
               Expanded(child: Text(state.dir)),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Select folder'),
                     onPressed: () async {
                       var dir = await FileSelectorPlatform.instance.getDirectoryPath(initialDirectory: state.dir ?? util.userHome, confirmButtonText: 'Select');
@@ -68,10 +68,10 @@ class DupeScreen extends StatelessWidget {
           if (state.selectedDupe != null ) Expanded(
             child: ListView.builder(
                 itemBuilder: (context, index) => createDupeInstanceWidget(
-                    context, state.dir, state.dupes[state.selectedDupe][index], state.dupes[state.selectedDupe].length > 1,
-                  state.dupes[state.selectedDupe].map((e) => path.dirname(e)).toSet().length != 1
+                    context, state.dir, state.dupes[state.selectedDupe!][index], state.dupes[state.selectedDupe!].length > 1,
+                  state.dupes[state.selectedDupe!].map((e) => path.dirname(e)).toSet().length != 1
                 ),
-                itemCount: state.dupes[state.selectedDupe].length,
+                itemCount: state.dupes[state.selectedDupe!].length,
             ),
           ),
         ],
@@ -79,7 +79,7 @@ class DupeScreen extends StatelessWidget {
     );
   }
 
-  bool isSelectedItem(FdupesStateResult state, int index) => state.selectedDupe != null && state.dupes[index] == state.dupes[state.selectedDupe];
+  bool isSelectedItem(FdupesStateResult state, int index) => state.selectedDupe != null && state.dupes[index] == state.dupes[state.selectedDupe!];
 
   Widget createDupeInstanceWidget(BuildContext context, String baseDir, String dupeFilename, bool showTrash, bool showFullPath) {
     return Row(
@@ -87,7 +87,7 @@ class DupeScreen extends StatelessWidget {
         InkWell(
           child: Icon(Icons.edit),
           onTap: () async {
-            String newFilename = await FileSelectorPlatform.instance.getSavePath(
+            final newFilename = await FileSelectorPlatform.instance.getSavePath(
               initialDirectory: path.dirname(dupeFilename),
               suggestedName: path.basename(dupeFilename),
               confirmButtonText: "Rename",
@@ -135,7 +135,7 @@ class AddTaskDialog extends StatefulWidget {
 }
 
 class _AddTaskDialogState extends State<AddTaskDialog> {
-  TextEditingController _filenameController;
+  late final TextEditingController _filenameController;
 
   @override
   void initState() {
@@ -163,7 +163,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         ],
       ),
       actions: <Widget>[
-        FlatButton(child: Text('Rename'),
+        TextButton(child: Text('Rename'),
             onPressed: () {
               Navigator.pop(context, _filenameController.text);
             }),
