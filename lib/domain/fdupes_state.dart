@@ -1,26 +1,45 @@
 part of 'fdupes_bloc.dart';
 
 @immutable
-abstract class FdupesState {
-  final String dir;
-
-  FdupesState(this.dir);
-}
+abstract class FdupesState {}
 
 class FdupesStateInitial extends FdupesState {
+  final String? initialDir;
 
-  FdupesStateInitial(String initialDir) : super(initialDir);
+  FdupesStateInitial(this.initialDir);
 }
 
 class FdupesStateError extends FdupesState {
   final String msg;
 
-  FdupesStateError(String dir, this.msg) : super(dir);
+  FdupesStateError(this.msg);
 }
-class FdupesStateResult extends FdupesState {
-  List<List<String>> dupes;
-  //todo review nullability
-  int? selectedDupe;
 
-  FdupesStateResult(String dir, this.dupes, {this.selectedDupe}) : super(dir);
+class FdupesStateResult extends FdupesState {
+  final String dir;
+  final List<List<String>> dupes;
+  //todo review nullability
+  final int? selectedDupe;
+  final bool loading;
+
+  FdupesStateResult({
+    required this.dir,
+    required this.dupes,
+    this.selectedDupe,
+    this.loading = false,
+  });
+
+  FdupesStateResult copyWith({
+    bool? loading,
+    String? dir,
+    List<List<String>>? dupes,
+    int? selectedDupe,
+  }) {
+    return FdupesStateResult(
+      dir: dir ?? this.dir,
+      dupes: dupes ?? this.dupes,
+      selectedDupe: selectedDupe ?? this.selectedDupe,
+      loading: loading ?? this.loading,
+    );
+  }
 }

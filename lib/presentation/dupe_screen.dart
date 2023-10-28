@@ -1,52 +1,62 @@
-
 import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
-import 'package:url_launcher/url_launcher.dart';
 
 class DupeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FdupesBloc, FdupesState>(
       builder: (context, state) {
+        if (state is FdupesStateInitial) {
+          return Center(
+            child: ElevatedButton(
+              child: Text('Select folder'),
+              onPressed: () => _showSelectFolderDialog(context, null),
+            ),
+          );
+        }
+        if (state is FdupesStateError) {
+          return Center(child: Text(state.msg));
+        }
+        if (state is FdupesStateResult) {
           return Container(
+            padding: EdgeInsets.all(8),
             child: Column(
               children: <Widget>[
                 Row(children: [
-              ElevatedButton(
-                child: Icon(Icons.refresh),
-                onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(state.dir)),
-              ),
-              Expanded(child: Text(state.dir)),
                   ElevatedButton(
-                    child: Text('Select folder'),
-                    onPressed: () async {
-                      var dir = await FileSelectorPlatform.instance.getDirectoryPath(initialDirectory: state.dir ?? util.userHome, confirmButtonText: 'Select');
-                      if (dir != null) {
-                        BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(dir));
-                      }
-                    },
+                    child: Text('Change folder'),
+                    onPressed: () => _showSelectFolderDialog(context, state.dir),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(child: Text(state.dir)),
+                  SizedBox(width: 8),
+                  ElevatedButton(
+                    child: Icon(Icons.refresh),
+                    onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(state.dir)),
                   ),
                 ]),
-                if (state is FdupesStateInitial)
-                    Text('Select dir'),
-                if (state is FdupesStateResult)
-                  if (state.dupes.isEmpty)
-                    Text('no dupes found')
-                  else
-                    showFileTree(context, state),
-                if (state is FdupesStateError)
-                    Text(state.msg),
+                SizedBox(height: 8),
+                if (state.dupes.isEmpty) Text('no dupes found') else showFileTree(context, state),
               ],
             ),
           );
         }
+        throw StateError('unexpected state $state');
+      },
     );
+  }
+
+  Future<void> _showSelectFolderDialog(BuildContext context, String? initialDir) async {
+    final dir = await FileSelectorPlatform.instance
+        .getDirectoryPath(initialDirectory: initialDir ?? util.userHome, confirmButtonText: 'Select');
+    if (dir != null) {
+      BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(dir));
+    }
   }
 
   showFileTree(BuildContext context, FdupesStateResult state) {
@@ -65,58 +75,67 @@ class DupeScreen extends StatelessWidget {
               itemCount: state.dupes.length,
             ),
           ),
-          if (state.selectedDupe != null ) Expanded(
-            child: ListView.builder(
+          if (state.selectedDupe != null)
+            Expanded(
+              child: ListView.builder(
                 itemBuilder: (context, index) => createDupeInstanceWidget(
-                    context, state.dir, state.dupes[state.selectedDupe!][index], state.dupes[state.selectedDupe!].length > 1,
-                  state.dupes[state.selectedDupe!].map((e) => path.dirname(e)).toSet().length != 1
-                ),
+                    context: context,
+                    baseDir: state.dir,
+                    dupeFilepath: state.dupes[state.selectedDupe!][index],
+                    showTrash: state.dupes[state.selectedDupe!].length > 1,
+                    showFullPath: state.dupes[state.selectedDupe!].map((e) => path.dirname(e)).toSet().length != 1),
                 itemCount: state.dupes[state.selectedDupe!].length,
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  bool isSelectedItem(FdupesStateResult state, int index) => state.selectedDupe != null && state.dupes[index] == state.dupes[state.selectedDupe!];
+  bool isSelectedItem(FdupesStateResult state, int index) =>
+      state.selectedDupe != null && state.dupes[index] == state.dupes[state.selectedDupe!];
 
-  Widget createDupeInstanceWidget(BuildContext context, String baseDir, String dupeFilename, bool showTrash, bool showFullPath) {
+  Widget createDupeInstanceWidget({
+    required BuildContext context,
+    required String baseDir,
+    required String dupeFilepath,
+    required bool showTrash,
+    required bool showFullPath,
+  }) {
     return Row(
       children: [
         InkWell(
           child: Icon(Icons.edit),
           onTap: () async {
-            final newFilename = await FileSelectorPlatform.instance.getSavePath(
-              initialDirectory: path.dirname(dupeFilename),
-              suggestedName: path.basename(dupeFilename),
-              confirmButtonText: "Rename",
+            final newFileSaveLocation = await FileSelectorPlatform.instance.getSaveLocation(
+              options: SaveDialogOptions(
+                initialDirectory: path.dirname(dupeFilepath),
+                suggestedName: path.basename(dupeFilepath),
+                confirmButtonText: "Rename",
+              ),
             );
-            if (newFilename != null && newFilename != dupeFilename) {
-              BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilename, newFilename));
+            if (newFileSaveLocation != null) {
+              final newFilePath = newFileSaveLocation.path;
+              if (newFilePath != dupeFilepath) {
+                BlocProvider.of<FdupesBloc>(context).add(FdupesEventRenameDupeInstance(dupeFilepath, newFilePath));
+              }
             }
           },
         ),
         InkWell(
-          onTap: () => openFile(dupeFilename),
-            child: Tooltip(child: Text(showFullPath ? path.relative(dupeFilename, from: baseDir) : path.basename(dupeFilename)), message: dupeFilename,),
+          onTap: () => openFile(dupeFilepath),
+          child: Tooltip(
+            child: Text(showFullPath ? path.relative(dupeFilepath, from: baseDir) : path.basename(dupeFilepath)),
+            message: dupeFilepath,
+          ),
         ),
         if (showTrash)
           InkWell(
             child: Icon(Icons.delete),
-            onTap: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDeleteDupeInstance(dupeFilename)),
+            onTap: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDeleteDupeInstance(dupeFilepath)),
           )
       ],
     );
-  }
-
-  _launchURL(String url) async {
-    const url = 'https://flutter.dev';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   openFile(String dup) async {
@@ -163,7 +182,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         ],
       ),
       actions: <Widget>[
-        TextButton(child: Text('Rename'),
+        TextButton(
+            child: Text('Rename'),
             onPressed: () {
               Navigator.pop(context, _filenameController.text);
             }),

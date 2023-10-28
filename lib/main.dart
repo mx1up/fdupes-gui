@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:process_run/which.dart';
-import 'package:fdupes_gui/core/util.dart' as util;
 
 class MyBlocObserver extends BlocObserver {
 
@@ -35,7 +31,7 @@ class MyBlocObserver extends BlocObserver {
 }
 
 void main(List<String> args) {
-  var initialDir = util.userHome;
+  String? initialDir;
   if (args.length > 0) {
     initialDir = args[0];
   }
@@ -48,27 +44,17 @@ void main(List<String> args) {
 }
 
 class MyApp extends StatelessWidget {
-  final String initialDir;
+  final String? initialDir;
 
   MyApp(this.initialDir);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FdupesBloc>(
-      create: (context) => FdupesBloc(initialDir),
+      create: (context) => FdupesBloc(initialDir: initialDir),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Fdupes gui',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
           primarySwatch: Colors.blue,
         ),
         home: Material(child: DupeScreen()),

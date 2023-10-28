@@ -4,6 +4,10 @@ part of 'fdupes_bloc.dart';
 abstract class FdupesEvent {}
 
 
+class FdupesEventCheckFdupesAvailability extends FdupesEvent {
+  FdupesEventCheckFdupesAvailability();
+}
+
 class FdupesEventDeleteDupeInstance extends FdupesEvent {
   final String filename;
 
