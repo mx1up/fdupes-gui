@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:process_run/which.dart';
 
@@ -44,7 +45,7 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     if (s is FdupesStateResult) {
       emit(s.copyWith(loading: true));
     }
-    final dupes = await findDupes(event.dir);
+    final dupes = await findDupes(event.dir, emit: emit);
 
     emit(FdupesStateResult(dir: event.dir, dupes: dupes));
   }
@@ -116,12 +117,29 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     }
   }
 
-  Future<List<List<String>>> findDupes(String dir) async {
+  Future<List<List<String>>> findDupes(String dir, {required Emitter<FdupesState> emit}) async {
     print("finding dupes in dir $dir");
     List<List<String>> dupes = [];
     Process process = await Process.start('fdupes', ['-r', dir]);
     // stdout.addStream(process.stdout);
-    stderr.addStream(process.stderr);
+    final regex = RegExp(r'\[(\d+)/(\d+)\]');
+    final stderrBC = process.stderr.asBroadcastStream();
+    stderrBC.transform(utf8.decoder).transform(const LineSplitter()).listen((line) {
+      final match = regex.firstMatch(line);
+      if (match != null) {
+        final currentString = match.group(1);
+        final totalString = match.group(2);
+        if (currentString != null && totalString != null) {
+          final current = int.tryParse(currentString);
+          final total = int.tryParse(totalString);
+          if (current != null && total != null) {
+            final progress = 100.0 * current / total;
+            emit(FdupesStateLoading(progress: progress.toInt()));
+          }
+        }
+      }
+    });
+    stderr.addStream(stderrBC);
     List<String> lines = await process.stdout.transform(utf8.decoder).transform(const LineSplitter()).toList();
     lines.forEach((element) {
       print(element);

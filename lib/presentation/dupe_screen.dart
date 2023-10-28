@@ -22,6 +22,11 @@ class DupeScreen extends StatelessWidget {
         if (state is FdupesStateError) {
           return Center(child: Text(state.msg));
         }
+        if (state is FdupesStateLoading) {
+          return Center(
+            child: CircularProgressIndicator(value: state.progress != null ? state.progress!.toDouble() / 100.0 : null),
+          );
+        }
         if (state is FdupesStateResult) {
           if (state.loading) {
             return Center(
