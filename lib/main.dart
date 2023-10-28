@@ -1,10 +1,10 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyBlocObserver extends BlocObserver {
-
   @override
   void onChange(BlocBase cubit, Change change) {
     print('${cubit.runtimeType}.onChange: $change');
@@ -38,8 +38,6 @@ void main(List<String> args) {
   print('initialDir=$initialDir');
   Bloc.observer = MyBlocObserver();
 
-
-
   runApp(MyApp(initialDir));
 }
 
@@ -52,12 +50,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<FdupesBloc>(
       create: (context) => FdupesBloc(initialDir: initialDir),
-      child: MaterialApp(
-        title: 'Fdupes gui',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      child: AdaptiveTheme(
+        // debugShowFloatingThemeButton: true,
+        light: ThemeData.light(useMaterial3: true),
+        dark: ThemeData.dark(useMaterial3: true),
+        initial: AdaptiveThemeMode.system,
+        builder: (theme, darkTheme) => MaterialApp(
+          title: 'Fdupes gui',
+          theme: theme,
+          darkTheme: darkTheme,
+          home: Material(child: DupeScreen()),
         ),
-        home: Material(child: DupeScreen()),
       ),
     );
   }
