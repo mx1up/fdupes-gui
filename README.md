@@ -6,7 +6,7 @@ A graphical user interface front end for `fdupes` cli program.
 
 Make sure the following prerequisites are met:
 * `fdupes` command is available from `PATH`
-* Download `fdupes_gui` from [releases]()
+* Download `fdupes_gui` from [releases](https://github.com/mx1up/fdupes-gui/releases)
 
 ## Usage
 
