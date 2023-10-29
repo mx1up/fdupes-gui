@@ -40,14 +40,14 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   FutureOr<void> _onDirSelected(FdupesEventDirSelected event, Emitter<FdupesState> emit) async {
     final s = state;
     if (s is FdupesStateInitial) {
-      emit(FdupesStateResult(dir: event.dir, dupes: [], loading: true));
+      emit(FdupesStateResult(dir: event.dir, dupeGroups: [], loading: true));
     }
     if (s is FdupesStateResult) {
       emit(s.copyWith(loading: true));
     }
     final dupes = await findDupes(event.dir, emit: emit);
 
-    emit(FdupesStateResult(dir: event.dir, dupes: dupes));
+    emit(FdupesStateResult(dir: event.dir, dupeGroups: dupes));
   }
 
   void _onDupeSelected(FdupesEventDupeSelected event, Emitter<FdupesState> emit) {
@@ -70,7 +70,7 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     try {
       print("deleting $file");
       await file.delete();
-      final newDupes = List.of(s.dupes)
+      final newDupes = List.of(s.dupeGroups)
           .map((dupeList) {
             return List.of(dupeList)..remove(event.filename);
           })
@@ -79,9 +79,9 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
       late final int? selectedDupe;
       if (newDupes.isEmpty) {
         selectedDupe = null;
-      } else if (s.selectedDupe != null) {
+      } else if (s.selectedDupeGroup != null) {
         //todo what's going on here
-        selectedDupe = s.selectedDupe! % newDupes.length;
+        selectedDupe = s.selectedDupeGroup! % newDupes.length;
       }
       emit(s.copyWith(dupes: newDupes, selectedDupe: selectedDupe));
     } catch (exc) {
@@ -103,11 +103,11 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
         return;
       }
       await file.rename(event.newFilename);
-      final dupeGroup = s.dupes.firstWhere((element) => element.contains(event.filename));
+      final dupeGroup = s.dupeGroups.firstWhere((element) => element.contains(event.filename));
       final updatedDupeGroup = List.of(dupeGroup)
         ..remove(event.filename)
         ..add(event.newFilename);
-      final newDupes = List.of(s.dupes)
+      final newDupes = List.of(s.dupeGroups)
         ..remove(dupeGroup)
         ..add(updatedDupeGroup);
 

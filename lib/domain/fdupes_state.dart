@@ -33,23 +33,23 @@ class FdupesStateLoading extends FdupesState {
 
 class FdupesStateResult extends FdupesState {
   final String dir;
-  final List<List<String>> dupes;
+  final List<List<String>> dupeGroups;
   //todo review nullability
-  final int? selectedDupe;
+  final int? selectedDupeGroup;
   final bool loading;
 
   @override
   List<Object?> get props => [
         dir,
-        dupes,
-        selectedDupe,
+        dupeGroups,
+        selectedDupeGroup,
         loading,
       ];
 
   FdupesStateResult({
     required this.dir,
-    required this.dupes,
-    this.selectedDupe,
+    required this.dupeGroups,
+    this.selectedDupeGroup,
     this.loading = false,
   });
 
@@ -61,8 +61,8 @@ class FdupesStateResult extends FdupesState {
   }) {
     return FdupesStateResult(
       dir: dir ?? this.dir,
-      dupes: dupes ?? this.dupes,
-      selectedDupe: selectedDupe ?? this.selectedDupe,
+      dupeGroups: dupes ?? this.dupeGroups,
+      selectedDupeGroup: selectedDupe ?? this.selectedDupeGroup,
       loading: loading ?? this.loading,
     );
   }
