@@ -2,6 +2,8 @@
 
 A graphical user interface front end for `fdupes` cli program.
 
+![screenshot](gfx/screenshot.png)
+
 ## Getting Started
 
 Make sure the following prerequisites are met:
