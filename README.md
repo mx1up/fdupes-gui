@@ -1,6 +1,8 @@
 # fdupes_gui
 
-A graphical user interface front end for `fdupes` cli program.
+A graphical user interface front end for `fdupes` cli program. 
+
+[Fdupes](https://github.com/adrianlopezroche/fdupes) is a program to detect duplicate files based on content in an efficient way. 
 
 ![screenshot](gfx/screenshot.png)
 
