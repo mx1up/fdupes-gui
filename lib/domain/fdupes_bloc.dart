@@ -6,15 +6,18 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:process_run/which.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'fdupes_event.dart';
 part 'fdupes_state.dart';
 
 class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   final String? initialDir;
+  String? fdupesLocation;
 
   FdupesBloc({this.initialDir}) : super(FdupesStateInitial(initialDir)) {
     on<FdupesEventCheckFdupesAvailability>(_onCheckFdupesAvailability);
+    on<FdupesEventSelectFdupesLocation>(_onSelectFdupesLocation);
     on<FdupesEventDirSelected>(_onDirSelected);
     on<FdupesEventDupeSelected>(_onDupeSelected);
     on<FdupesEventDeleteDupeInstance>(_onDeleteDupeInstance);
@@ -23,11 +26,21 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   }
 
   FutureOr<void> _onCheckFdupesAvailability(FdupesEventCheckFdupesAvailability event, Emitter<FdupesState> emit) async {
-    final fdupesPath = await which('fdupes');
-    print('fdupes = $fdupesPath');
-    final fdupesFound = fdupesPath != null;
+    emit(FdupesStateLoading(msg: 'Locating fdupes binary..'));
+    fdupesLocation = await which('fdupes');
+    print('which(fdupes) = $fdupesLocation');
+    if (fdupesLocation == null) {
+      print('fdupes not found, check custom location');
+      final sharedPrefs = await SharedPreferences.getInstance();
+      final customFdupesLocation = sharedPrefs.getString('fdupes_location');
+      print('customFdupesLocation = $customFdupesLocation');
+      if (customFdupesLocation != null && await validFdupesLocation(customFdupesLocation)) {
+        fdupesLocation = customFdupesLocation;
+      }
+    }
+    final fdupesFound = fdupesLocation != null;
     if (!fdupesFound) {
-      emit(FdupesStateError('fdupes not found'));
+      emit(FdupesStateFdupesNotFound());
       return;
     }
     if (initialDir != null) {
@@ -35,6 +48,27 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     } else {
       emit(FdupesStateInitial(initialDir));
     }
+  }
+
+  FutureOr<void> _onSelectFdupesLocation(FdupesEventSelectFdupesLocation event, Emitter<FdupesState> emit) async {
+    emit(FdupesStateLoading(msg: 'Checking for valid fdupes binary..'));
+    final validLocation = await validFdupesLocation(event.fdupesLocation);
+
+    if (validLocation) {
+      final sharedPrefs = await SharedPreferences.getInstance();
+      final saved = await sharedPrefs.setString('fdupes_location', event.fdupesLocation);
+      if (!saved) {
+        emit(FdupesStateFdupesNotFound(statusMsg: 'Failed to save custom fdupes location preference.'));
+        return;
+      }
+      add(FdupesEventCheckFdupesAvailability());
+    }
+    else emit(FdupesStateFdupesNotFound(statusMsg: 'Not a valid fdupes binary.'));
+  }
+
+  Future<bool> validFdupesLocation(String path) async {
+    ProcessResult result = await Process.run(path, ['--version']);
+    return result.exitCode == 0 && (result.stdout as String).split(' ')[0] == 'fdupes';
   }
 
   FutureOr<void> _onDirSelected(FdupesEventDirSelected event, Emitter<FdupesState> emit) async {
@@ -120,7 +154,7 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   Future<List<List<String>>> findDupes(String dir, {required Emitter<FdupesState> emit}) async {
     print("finding dupes in dir $dir");
     List<List<String>> dupes = [];
-    Process process = await Process.start('fdupes', ['-r', dir]);
+    Process process = await Process.start(fdupesLocation!, ['-r', dir]);
     // stdout.addStream(process.stdout);
     final regex = RegExp(r'\[(\d+)/(\d+)\]');
     final stderrBC = process.stderr.asBroadcastStream();

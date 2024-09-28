@@ -8,6 +8,12 @@ class FdupesEventCheckFdupesAvailability extends FdupesEvent {
   FdupesEventCheckFdupesAvailability();
 }
 
+class FdupesEventSelectFdupesLocation extends FdupesEvent {
+  final String fdupesLocation;
+
+  FdupesEventSelectFdupesLocation(this.fdupesLocation);
+}
+
 class FdupesEventDeleteDupeInstance extends FdupesEvent {
   final String filename;
 

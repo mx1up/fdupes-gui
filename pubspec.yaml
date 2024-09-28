@@ -19,6 +19,7 @@ dependencies:
   path: ^1.8.3
   adaptive_theme: ^3.4.1
   equatable: ^2.0.5
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
