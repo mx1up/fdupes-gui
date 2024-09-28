@@ -8,7 +8,7 @@
 PRODUCT_NAME = fdupes_gui
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = be.shibby.fdupes_gui
+PRODUCT_BUNDLE_IDENTIFIER = be.shibby.fdupes-gui
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 Shibby Entertainment. All rights reserved.

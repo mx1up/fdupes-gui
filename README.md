@@ -45,5 +45,5 @@ Recalculates duplicates by pressing the 'Refresh' button top right.
 
 ## Config location
 
-* MacOS: `~/Library/Preferences/be.shibby.fdupes_gui.plist`
+* MacOS: `~/Library/Preferences/be.shibby.fdupes-gui.plist`
 * Linux: todo
