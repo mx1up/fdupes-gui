@@ -67,8 +67,13 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   }
 
   Future<bool> validFdupesLocation(String path) async {
-    ProcessResult result = await Process.run(path, ['--version']);
-    return result.exitCode == 0 && (result.stdout as String).split(' ')[0] == 'fdupes';
+    try {
+      ProcessResult result = await Process.run(path, ['--version']);
+      return result.exitCode == 0 && (result.stdout as String).split(' ')[0] == 'fdupes';
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   FutureOr<void> _onDirSelected(FdupesEventDirSelected event, Emitter<FdupesState> emit) async {
