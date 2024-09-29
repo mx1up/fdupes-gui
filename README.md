@@ -46,4 +46,4 @@ Recalculates duplicates by pressing the 'Refresh' button top right.
 ## Config location
 
 * MacOS: `~/Library/Preferences/be.shibby.fdupes-gui.plist`
-* Linux: todo
+* Linux: `~/.local/share/be.shibby.fdupes_gui/shared_preferences.json`
