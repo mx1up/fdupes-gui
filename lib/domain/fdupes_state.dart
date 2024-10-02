@@ -21,6 +21,15 @@ class FdupesStateError extends FdupesState {
   List<Object?> get props => [msg];
 }
 
+class FdupesStateFdupesNotFound extends FdupesState {
+  final String? statusMsg;
+
+  FdupesStateFdupesNotFound({this.statusMsg});
+
+  @override
+  List<Object?> get props => [statusMsg];
+}
+
 class FdupesStateLoading extends FdupesState {
   final String? msg;
   final int? progress;

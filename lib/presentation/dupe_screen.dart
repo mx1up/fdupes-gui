@@ -18,6 +18,31 @@ class DupeScreen extends StatelessWidget {
             ),
           );
         }
+        if (state is FdupesStateFdupesNotFound) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Fdupes binary not found.'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _locateBinary(context),
+                  child: Text('Locate'),
+                ),
+                if (state.statusMsg != null) ...[
+                  SizedBox(height: 16),
+                  Text(
+                    state.statusMsg!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                ]
+              ],
+            ),
+          );
+        }
         if (state is FdupesStateError) {
           return Center(child: Text(state.msg));
         }
@@ -73,5 +98,15 @@ class DupeScreen extends StatelessWidget {
     if (dir != null) {
       BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(dir));
     }
+  }
+
+  Future<void> _locateBinary(BuildContext context) async {
+    final fdupesBloc = context.read<FdupesBloc>();
+    final fdupesLocation = await FileSelectorPlatform.instance.openFile(
+      initialDirectory: util.userHome,
+      confirmButtonText: 'Select',
+    );
+    if (fdupesLocation == null) return;
+    fdupesBloc.add(FdupesEventSelectFdupesLocation(fdupesLocation.path));
   }
 }

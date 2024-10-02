@@ -10,6 +10,7 @@ A graphical user interface front end for `fdupes` cli program.
 
 Make sure the following prerequisites are met:
 * `fdupes` command is available from `PATH`
+  * When not found, you can still select the `fdupes` binary location manually.
 * Download `fdupes_gui` from [releases](https://github.com/mx1up/fdupes-gui/releases)
 
 ## Usage
@@ -41,3 +42,8 @@ The following actions can be performed:
 ### Refresh
 
 Recalculates duplicates by pressing the 'Refresh' button top right.
+
+## Config location
+
+* MacOS: `~/Library/Preferences/be.shibby.fdupes-gui.plist`
+* Linux: `~/.local/share/be.shibby.fdupes_gui/shared_preferences.json`
