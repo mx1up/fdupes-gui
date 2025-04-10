@@ -90,12 +90,24 @@ class DupeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8),
-                    Tooltip(
-                      message: 'Find duplicates',
-                      child: ElevatedButton(
-                        child: Icon(Icons.refresh),
-                        onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(state.dirs)),
-                      ),
+                    Column(
+                      children: [
+                        Tooltip(
+                          message: 'Find duplicates',
+                          child: ElevatedButton(
+                            child: Icon(Icons.refresh),
+                            onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(state.dirs)),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Tooltip(
+                          message: 'Add input folder',
+                          child: ElevatedButton(
+                            child: Icon(Icons.add),
+                            onPressed: () => _showSelectFolderDialog(context, initialDir: null, currentDirs: state.dirs),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
