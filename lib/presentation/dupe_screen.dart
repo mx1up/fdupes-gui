@@ -65,23 +65,27 @@ class DupeScreen extends StatelessWidget {
               children: <Widget>[
                 Row(
                   mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: state.dirs
-                            .map((dir) => Row(children: [
-                                  ElevatedButton(
-                                    child: Text('Change folder'),
-                                    onPressed: () => _showSelectFolderDialog(
-                                      context,
-                                      initialDir: dir,
-                                      currentDirs: state.dirs,
+                            .map((dir) => [
+                                  Row(children: [
+                                    ElevatedButton(
+                                      child: Text('Change folder'),
+                                      onPressed: () => _showSelectFolderDialog(
+                                        context,
+                                        initialDir: dir,
+                                        currentDirs: state.dirs,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(dir.path),
-                                ]))
+                                    SizedBox(width: 8),
+                                    Text(dir.path),
+                                  ]),
+                                  SizedBox(height: 8),
+                                ])
+                            .expand((e) => e)
                             .toList(),
                       ),
                     ),
