@@ -31,25 +31,25 @@ class MyBlocObserver extends BlocObserver {
 }
 
 void main(List<String> args) {
-  String? initialDir;
+  List<String>? initialDirs;
   if (args.length > 0) {
-    initialDir = args[0];
+    initialDirs = args;
   }
-  print('initialDir=$initialDir');
+  print('initialDirs=$initialDirs');
   Bloc.observer = MyBlocObserver();
 
-  runApp(MyApp(initialDir));
+  runApp(MyApp(initialDirs));
 }
 
 class MyApp extends StatelessWidget {
-  final String? initialDir;
+  final List<String>? initialDirs;
 
-  MyApp(this.initialDir);
+  MyApp(this.initialDirs);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FdupesBloc>(
-      create: (context) => FdupesBloc(initialDir: initialDir),
+      create: (context) => FdupesBloc(initialDirs: initialDirs),
       child: AdaptiveTheme(
         // debugShowFloatingThemeButton: true,
         light: ThemeData.light(useMaterial3: true),

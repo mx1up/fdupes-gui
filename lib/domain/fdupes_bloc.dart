@@ -12,13 +12,13 @@ part 'fdupes_event.dart';
 part 'fdupes_state.dart';
 
 class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
-  final String? initialDir;
+  final List<String>? initialDirs;
   String? fdupesLocation;
 
-  FdupesBloc({this.initialDir}) : super(FdupesStateInitial(initialDir)) {
+  FdupesBloc({this.initialDirs}) : super(FdupesStateInitial(initialDirs)) {
     on<FdupesEventCheckFdupesAvailability>(_onCheckFdupesAvailability);
     on<FdupesEventSelectFdupesLocation>(_onSelectFdupesLocation);
-    on<FdupesEventDirSelected>(_onDirSelected);
+    on<FdupesEventDirsSelected>(_onDirsSelected);
     on<FdupesEventDupeSelected>(_onDupeSelected);
     on<FdupesEventDeleteDupeInstance>(_onDeleteDupeInstance);
     on<FdupesEventRenameDupeInstance>(_onRenameDupeInstance);
@@ -43,10 +43,10 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
       emit(FdupesStateFdupesNotFound());
       return;
     }
-    if (initialDir != null) {
-      add(FdupesEventDirSelected(initialDir!));
+    if (initialDirs != null) {
+      add(FdupesEventDirsSelected(initialDirs!));
     } else {
-      emit(FdupesStateInitial(initialDir));
+      emit(FdupesStateInitial(initialDirs));
     }
   }
 
@@ -76,17 +76,17 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     }
   }
 
-  FutureOr<void> _onDirSelected(FdupesEventDirSelected event, Emitter<FdupesState> emit) async {
+  FutureOr<void> _onDirsSelected(FdupesEventDirsSelected event, Emitter<FdupesState> emit) async {
     final s = state;
     if (s is FdupesStateInitial) {
-      emit(FdupesStateResult(dir: event.dir, dupeGroups: [], loading: true));
+      emit(FdupesStateResult(dirs: event.dirs, dupeGroups: [], loading: true));
     }
     if (s is FdupesStateResult) {
       emit(s.copyWith(loading: true));
     }
-    final dupes = await findDupes(event.dir, emit: emit);
+    final dupes = await findDupes(event.dirs, emit: emit);
 
-    emit(FdupesStateResult(dir: event.dir, dupeGroups: dupes));
+    emit(FdupesStateResult(dirs: event.dirs, dupeGroups: dupes));
   }
 
   void _onDupeSelected(FdupesEventDupeSelected event, Emitter<FdupesState> emit) {
@@ -156,10 +156,10 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     }
   }
 
-  Future<List<List<String>>> findDupes(String dir, {required Emitter<FdupesState> emit}) async {
-    print("finding dupes in dir $dir");
+  Future<List<List<String>>> findDupes(List<String> dirs, {required Emitter<FdupesState> emit}) async {
+    print("finding dupes in dirs $dirs");
     List<List<String>> dupes = [];
-    Process process = await Process.start(fdupesLocation!, ['-r', dir]);
+    Process process = await Process.start(fdupesLocation!, ['-r', ...dirs]);
     // stdout.addStream(process.stdout);
     final regex = RegExp(r'\[(\d+)/(\d+)\]');
     final stderrBC = process.stderr.asBroadcastStream();

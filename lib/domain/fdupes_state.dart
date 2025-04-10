@@ -4,12 +4,12 @@ part of 'fdupes_bloc.dart';
 abstract class FdupesState extends Equatable {}
 
 class FdupesStateInitial extends FdupesState {
-  final String? initialDir;
+  final List<String>? initialDirs;
 
-  FdupesStateInitial(this.initialDir);
+  FdupesStateInitial(this.initialDirs);
 
   @override
-  List<Object?> get props => [initialDir];
+  List<Object?> get props => [initialDirs];
 }
 
 class FdupesStateError extends FdupesState {
@@ -41,7 +41,7 @@ class FdupesStateLoading extends FdupesState {
 }
 
 class FdupesStateResult extends FdupesState {
-  final String dir;
+  final List<String> dirs;
   final List<List<String>> dupeGroups;
   //todo review nullability
   final int? selectedDupeGroup;
@@ -49,14 +49,14 @@ class FdupesStateResult extends FdupesState {
 
   @override
   List<Object?> get props => [
-        dir,
+        dirs,
         dupeGroups,
         selectedDupeGroup,
         loading,
       ];
 
   FdupesStateResult({
-    required this.dir,
+    required this.dirs,
     required this.dupeGroups,
     this.selectedDupeGroup,
     this.loading = false,
@@ -64,12 +64,12 @@ class FdupesStateResult extends FdupesState {
 
   FdupesStateResult copyWith({
     bool? loading,
-    String? dir,
+    List<String>? dirs,
     List<List<String>>? dupes,
     int? selectedDupe,
   }) {
     return FdupesStateResult(
-      dir: dir ?? this.dir,
+      dirs: dirs ?? this.dirs,
       dupeGroups: dupes ?? this.dupeGroups,
       selectedDupeGroup: selectedDupe ?? this.selectedDupeGroup,
       loading: loading ?? this.loading,

@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as path;
 
 class DupesBody extends StatelessWidget {
-  final String baseDir;
+  final List<String> baseDirs;
   final List<List<String>> dupeGroups;
   final int? selectedDupeGroup;
 
   const DupesBody({
-    required this.baseDir,
+    required this.baseDirs,
     required this.dupeGroups,
     this.selectedDupeGroup,
     super.key,
@@ -29,7 +29,7 @@ class DupesBody extends StatelessWidget {
                 dense: true,
                 visualDensity: VisualDensity(vertical: VisualDensity.minimumDensity),
                 minVerticalPadding: 0,
-                title: Text(path.relative(dupeGroups[index][0], from: baseDir)),
+                title: Text(path.relative(dupeGroups[index][0], from: _baseDirOf(dupeGroups[index][0], baseDirs))),
               ),
               itemCount: dupeGroups.length,
             ),
@@ -39,7 +39,7 @@ class DupesBody extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) => DupeInstance(
-                  baseDir: baseDir,
+                  baseDir: _baseDirOf(dupeGroups[selectedDupeGroup!][index], baseDirs),
                   dupeGroup: dupeGroups[selectedDupeGroup!],
                   index: index,
                 ),
@@ -54,4 +54,13 @@ class DupesBody extends StatelessWidget {
 
   bool _isSelectedItem(List<List<String>> dupeGroups, int? selectedDupeGroup, int index) =>
       selectedDupeGroup != null && dupeGroups[index] == dupeGroups[selectedDupeGroup];
+
+  String _baseDirOf(String filename, List<String> baseDirs) {
+    for (final baseDir in baseDirs) {
+      if (filename.startsWith(baseDir)) {
+        return baseDir;
+      }
+    }
+    return '';
+  }
 }
