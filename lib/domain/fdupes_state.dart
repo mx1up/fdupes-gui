@@ -4,7 +4,7 @@ part of 'fdupes_bloc.dart';
 abstract class FdupesState extends Equatable {}
 
 class FdupesStateInitial extends FdupesState {
-  final List<String>? initialDirs;
+  final List<Directory>? initialDirs;
 
   FdupesStateInitial(this.initialDirs);
 
@@ -41,7 +41,7 @@ class FdupesStateLoading extends FdupesState {
 }
 
 class FdupesStateResult extends FdupesState {
-  final List<String> dirs;
+  final List<Directory> dirs;
   final List<List<String>> dupeGroups;
   //todo review nullability
   final int? selectedDupeGroup;
@@ -64,7 +64,7 @@ class FdupesStateResult extends FdupesState {
 
   FdupesStateResult copyWith({
     bool? loading,
-    List<String>? dirs,
+    List<Directory>? dirs,
     List<List<String>>? dupes,
     int? selectedDupe,
   }) {

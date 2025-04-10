@@ -28,7 +28,7 @@ class FdupesEventRenameDupeInstance extends FdupesEvent {
 }
 
 class FdupesEventDirsSelected extends FdupesEvent {
-  final List<String> dirs;
+  final List<Directory> dirs;
 
   FdupesEventDirsSelected(this.dirs);
 }

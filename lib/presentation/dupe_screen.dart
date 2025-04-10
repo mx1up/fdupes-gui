@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupes_body.dart';
@@ -78,7 +80,7 @@ class DupeScreen extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(width: 8),
-                                  Text(dir),
+                                  Text(dir.path),
                                 ]))
                             .toList(),
                       ),
@@ -113,16 +115,16 @@ class DupeScreen extends StatelessWidget {
 
   Future<void> _showSelectFolderDialog(
     BuildContext context, {
-    String? initialDir,
-    required List<String> currentDirs,
+    Directory? initialDir,
+    required List<Directory> currentDirs,
   }) async {
     final dir = await FileSelectorPlatform.instance
-        .getDirectoryPath(initialDirectory: initialDir ?? util.userHome, confirmButtonText: 'Select');
+        .getDirectoryPath(initialDirectory: initialDir?.path ?? util.userHome, confirmButtonText: 'Select');
     if (dir != null) {
       if (initialDir != null) {
         currentDirs.remove(initialDir);
       }
-      currentDirs.add(dir);
+      currentDirs.add(Directory(dir));
       BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(currentDirs));
     }
   }

@@ -12,7 +12,7 @@ part 'fdupes_event.dart';
 part 'fdupes_state.dart';
 
 class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
-  final List<String>? initialDirs;
+  final List<Directory>? initialDirs;
   String? fdupesLocation;
 
   FdupesBloc({this.initialDirs}) : super(FdupesStateInitial(initialDirs)) {
@@ -156,10 +156,10 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     }
   }
 
-  Future<List<List<String>>> findDupes(List<String> dirs, {required Emitter<FdupesState> emit}) async {
+  Future<List<List<String>>> findDupes(List<Directory> dirs, {required Emitter<FdupesState> emit}) async {
     print("finding dupes in dirs $dirs");
     List<List<String>> dupes = [];
-    Process process = await Process.start(fdupesLocation!, ['-r', ...dirs]);
+    Process process = await Process.start(fdupesLocation!, ['-r', ...dirs.map((d) => d.path)]);
     // stdout.addStream(process.stdout);
     final regex = RegExp(r'\[(\d+)/(\d+)\]');
     final stderrBC = process.stderr.asBroadcastStream();

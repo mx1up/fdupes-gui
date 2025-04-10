@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_instance.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as path;
 
 class DupesBody extends StatelessWidget {
-  final List<String> baseDirs;
+  final List<Directory> baseDirs;
   final List<List<String>> dupeGroups;
   final int? selectedDupeGroup;
 
@@ -29,7 +31,7 @@ class DupesBody extends StatelessWidget {
                 dense: true,
                 visualDensity: VisualDensity(vertical: VisualDensity.minimumDensity),
                 minVerticalPadding: 0,
-                title: Text(path.relative(dupeGroups[index][0], from: _baseDirOf(dupeGroups[index][0], baseDirs))),
+                title: Text(path.relative(dupeGroups[index][0], from: _baseDirPathOf(dupeGroups[index][0], baseDirs))),
               ),
               itemCount: dupeGroups.length,
             ),
@@ -41,7 +43,7 @@ class DupesBody extends StatelessWidget {
                 data: TooltipThemeData(waitDuration: Duration.zero),
                 child: ListView.builder(
                   itemBuilder: (context, index) => DupeInstance(
-                    baseDir: _baseDirOf(dupeGroups[selectedDupeGroup!][index], baseDirs),
+                    baseDir: _baseDirPathOf(dupeGroups[selectedDupeGroup!][index], baseDirs),
                     dupeGroup: dupeGroups[selectedDupeGroup!],
                     index: index,
                   ),
@@ -58,10 +60,10 @@ class DupesBody extends StatelessWidget {
   bool _isSelectedItem(List<List<String>> dupeGroups, int? selectedDupeGroup, int index) =>
       selectedDupeGroup != null && dupeGroups[index] == dupeGroups[selectedDupeGroup];
 
-  String _baseDirOf(String filename, List<String> baseDirs) {
+  String _baseDirPathOf(String filename, List<Directory> baseDirs) {
     for (final baseDir in baseDirs) {
-      if (filename.startsWith(baseDir)) {
-        return baseDir;
+      if (filename.startsWith(baseDir.path)) {
+        return baseDir.path;
       }
     }
     return '';

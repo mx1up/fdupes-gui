@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_screen.dart';
@@ -32,18 +34,21 @@ class MyBlocObserver extends BlocObserver {
 }
 
 void main(List<String> args) {
-  List<String>? initialDirs;
+  List<String>? initialDirsArg;
   if (args.length > 0) {
-    initialDirs = args;
+    initialDirsArg = args;
   }
-  print('initialDirs=$initialDirs');
+  print('initialDirs=$initialDirsArg');
+  final initialDirs =
+      initialDirsArg?.map((e) => Directory(e)).where((element) => element.existsSync()).map((e) => e.absolute).toList();
+  print('valid initialDirs=$initialDirs');
   Bloc.observer = MyBlocObserver();
 
   runApp(MyApp(initialDirs));
 }
 
 class MyApp extends StatelessWidget {
-  final List<String>? initialDirs;
+  final List<Directory>? initialDirs;
 
   MyApp(this.initialDirs);
 
