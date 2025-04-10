@@ -1,6 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_screen.dart';
+import 'package:fdupes_gui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,8 +53,8 @@ class MyApp extends StatelessWidget {
       create: (context) => FdupesBloc(initialDirs: initialDirs),
       child: AdaptiveTheme(
         // debugShowFloatingThemeButton: true,
-        light: ThemeData.light(useMaterial3: true),
-        dark: ThemeData.dark(useMaterial3: true),
+        light: FdupesTheme.light(),
+        dark: FdupesTheme.dark(),
         initial: AdaptiveThemeMode.system,
         builder: (theme, darkTheme) => MaterialApp(
           title: 'Fdupes gui',

@@ -71,7 +71,11 @@ class DupeScreen extends StatelessWidget {
                             .map((dir) => Row(children: [
                                   ElevatedButton(
                                     child: Text('Change folder'),
-                                    onPressed: () => _showSelectFolderDialog(context, initialDir: dir, currentDirs: state.dirs),
+                                    onPressed: () => _showSelectFolderDialog(
+                                      context,
+                                      initialDir: dir,
+                                      currentDirs: state.dirs,
+                                    ),
                                   ),
                                   SizedBox(width: 8),
                                   Text(dir),
@@ -80,9 +84,12 @@ class DupeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 8),
-                    ElevatedButton(
-                      child: Icon(Icons.refresh),
-                      onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(state.dirs)),
+                    Tooltip(
+                      message: 'Find duplicates',
+                      child: ElevatedButton(
+                        child: Icon(Icons.refresh),
+                        onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(state.dirs)),
+                      ),
                     ),
                   ],
                 ),

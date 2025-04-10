@@ -37,13 +37,16 @@ class DupesBody extends StatelessWidget {
           if (selectedDupeGroup != null) ...[
             VerticalDivider(thickness: 4),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) => DupeInstance(
-                  baseDir: _baseDirOf(dupeGroups[selectedDupeGroup!][index], baseDirs),
-                  dupeGroup: dupeGroups[selectedDupeGroup!],
-                  index: index,
+              child: TooltipTheme(
+                data: TooltipThemeData(waitDuration: Duration.zero),
+                child: ListView.builder(
+                  itemBuilder: (context, index) => DupeInstance(
+                    baseDir: _baseDirOf(dupeGroups[selectedDupeGroup!][index], baseDirs),
+                    dupeGroup: dupeGroups[selectedDupeGroup!],
+                    index: index,
+                  ),
+                  itemCount: dupeGroups[selectedDupeGroup!].length,
                 ),
-                itemCount: dupeGroups[selectedDupeGroup!].length,
               ),
             ),
           ],
