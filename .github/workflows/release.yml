@@ -1,6 +1,7 @@
 name: release builds
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'release/*'
