@@ -73,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: /build/linux/x64/release/bundle
+          path: build/linux/x64/release/bundle
 
   build-macos:
     name: Build on macOS
