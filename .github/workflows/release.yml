@@ -60,6 +60,7 @@ jobs:
         with:
           name: "v${{ steps.release_info.outputs.version }}"
           body: ${{ steps.release_info.outputs.notes }}
+          fail_on_unmatched_files: true
           files: |
             out/fdupes_gui-${{ steps.release_info.outputs.version }}-windows.zip
             out/fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.tar.gz
