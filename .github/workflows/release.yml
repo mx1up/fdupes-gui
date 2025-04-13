@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build-windows, build-linux, build-macos]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract version from tag
+        id: release_info
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/release/}
+          NOTES=$(awk "/^## $VERSION/ {flag=1; next} /^## / {if (flag) exit} flag" CHANGELOG.md)
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: out/windows
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-build
+          path: out/linux
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-build
+          path: out/macos
+
+      - name: Create zip files with version
+        run: |
+          cd out
+          zip -r fdupes_gui-${{ steps.vars.outputs.version }}-windows.zip windows
+          zip -r fdupes_gui-${{ steps.vars.outputs.version }}-linux.x86_64.zip linux
+          zip -r fdupes_gui-${{ steps.vars.outputs.version }}-macos.universal.zip macos
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "v${{ steps.release_info.outputs.version }}"
+          body: ${{ steps.release_info.outputs.notes }}
+          files: |
+            out/fdupes_gui-${{ steps.vars.outputs.version }}-windows.zip
+            out/fdupes_gui-${{ steps.vars.outputs.version }}-linux.x86_64.zip
+            out/fdupes_gui-${{ steps.vars.outputs.version }}-macos.universal.zip
