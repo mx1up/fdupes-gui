@@ -61,6 +61,6 @@ jobs:
           name: "v${{ steps.release_info.outputs.version }}"
           body: ${{ steps.release_info.outputs.notes }}
           files: |
-            out/fdupes_gui-${{ steps.vars.outputs.version }}-windows.zip
-            out/fdupes_gui-${{ steps.vars.outputs.version }}-linux.x86_64.zip
-            out/fdupes_gui-${{ steps.vars.outputs.version }}-macos.universal.zip
+            out/fdupes_gui-${{ steps.release_info.outputs.version }}-windows.zip
+            out/fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.tar.gz
+            out/fdupes_gui-${{ steps.release_info.outputs.version }}-macos.universal.zip
