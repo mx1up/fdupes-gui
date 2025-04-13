@@ -15,10 +15,6 @@ on:
         required: false
         type: boolean
         default: true
-    outputs:
-      artifact-names:
-        description: "List of uploaded artifacts"
-        value: ${{ steps.set-artifacts.outputs.names }}
 
 env:
   FLUTTER_VERSION: 3.13.9
