@@ -3,6 +3,10 @@ description: fdupes front-end
 publish_to: 'none'
 version: 0.2.1+3
 
+dependency_overrides:
+  image:
+    path: ../../../source/hacking/github/image
+
 environment:
   sdk: ">=3.1.5 <4.0.0"
   flutter: ">=3.13.9"
@@ -22,10 +26,17 @@ dependencies:
   shared_preferences: ^2.2.2
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
+  flutter_launcher_icons:
+    path: ../../../source/hacking/github/flutter_launcher_icons
 
 flutter:
   uses-material-design: true
   assets:
     - assets/app_icon_256.png
+
+flutter_launcher_icons:
+  windows:
+    image_path: "assets/app_icon_256.png"
+    generate: true
