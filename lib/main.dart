@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_screen.dart';
+import 'package:fdupes_gui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,29 +34,32 @@ class MyBlocObserver extends BlocObserver {
 }
 
 void main(List<String> args) {
-  String? initialDir;
+  List<String>? initialDirsArg;
   if (args.length > 0) {
-    initialDir = args[0];
+    initialDirsArg = args;
   }
-  print('initialDir=$initialDir');
+  print('initialDirs=$initialDirsArg');
+  final initialDirs =
+      initialDirsArg?.map((e) => Directory(e)).where((element) => element.existsSync()).map((e) => e.absolute).toList();
+  print('valid initialDirs=$initialDirs');
   Bloc.observer = MyBlocObserver();
 
-  runApp(MyApp(initialDir));
+  runApp(MyApp(initialDirs));
 }
 
 class MyApp extends StatelessWidget {
-  final String? initialDir;
+  final List<Directory>? initialDirs;
 
-  MyApp(this.initialDir);
+  MyApp(this.initialDirs);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FdupesBloc>(
-      create: (context) => FdupesBloc(initialDir: initialDir),
+      create: (context) => FdupesBloc(initialDirs: initialDirs),
       child: AdaptiveTheme(
         // debugShowFloatingThemeButton: true,
-        light: ThemeData.light(useMaterial3: true),
-        dark: ThemeData.dark(useMaterial3: true),
+        light: FdupesTheme.light(),
+        dark: FdupesTheme.dark(),
         initial: AdaptiveThemeMode.system,
         builder: (theme, darkTheme) => MaterialApp(
           title: 'Fdupes gui',

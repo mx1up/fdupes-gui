@@ -17,11 +17,15 @@ Make sure the following prerequisites are met:
 
 ### Folder selection
 
-Specify initial folder to scan for duplicates, either:
-* Pass a parameter (full folder path) to the `fdupes_gui` executable
+Specify initial folders to scan for duplicates, either:
+* Pass parameters (full folder paths) to the `fdupes_gui` executable
 * Select a folder using the 'Select folder' button
 
 Change folder: press the 'Change folder' button on the top left.
+
+Add additional folders to scan for duplicates: press the + button on the top right.
+
+Remove a folder: click the - button on the right of the folder name.
 
 ### Dupe group selection
 
@@ -30,7 +34,7 @@ Clicking on a dupe group will select it and show the duplicate instances on the 
 ### Dupe instances
 
 A dupe instance shows its simple filename if all dupes are in the same folder, or includes
-its path relative to the selected dir (= base dir) otherwise.
+its path relative to its base dir otherwise.
 
 The following actions can be performed:
 

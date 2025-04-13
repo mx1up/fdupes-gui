@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupes_body.dart';
@@ -14,7 +16,7 @@ class DupeScreen extends StatelessWidget {
           return Center(
             child: ElevatedButton(
               child: Text('Select folder'),
-              onPressed: () => _showSelectFolderDialog(context, null),
+              onPressed: () => _showSelectFolderDialog(context, initialDir: null, currentDirs: []),
             ),
           );
         }
@@ -61,25 +63,69 @@ class DupeScreen extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: Column(
               children: <Widget>[
-                Row(children: [
-                  ElevatedButton(
-                    child: Text('Change folder'),
-                    onPressed: () => _showSelectFolderDialog(context, state.dir),
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(child: Text(state.dir)),
-                  SizedBox(width: 8),
-                  ElevatedButton(
-                    child: Icon(Icons.refresh),
-                    onPressed: () => BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(state.dir)),
-                  ),
-                ]),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: state.dirs
+                            .map((dir) => [
+                                  Row(children: [
+                                    ElevatedButton(
+                                      child: Text('Change folder'),
+                                      onPressed: () => _showSelectFolderDialog(
+                                        context,
+                                        initialDir: dir,
+                                        currentDirs: state.dirs,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(dir.path),
+                                    IconButton(
+                                      icon: Icon(Icons.remove_circle),
+                                      visualDensity: VisualDensity.compact,
+                                      iconSize: 14,
+                                      onPressed: () => BlocProvider.of<FdupesBloc>(context)
+                                          .add(FdupesEventDirsSelected(state.dirs..remove(dir))),
+                                    ),
+                                  ]),
+                                  SizedBox(height: 8),
+                                ])
+                            .expand((e) => e)
+                            .toList(),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Column(
+                      children: [
+                        Tooltip(
+                          message: 'Find duplicates',
+                          child: ElevatedButton(
+                            child: Icon(Icons.refresh),
+                            onPressed: () =>
+                                BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(state.dirs)),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Tooltip(
+                          message: 'Add input folder',
+                          child: ElevatedButton(
+                            child: Icon(Icons.add),
+                            onPressed: () =>
+                                _showSelectFolderDialog(context, initialDir: null, currentDirs: state.dirs),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 SizedBox(height: 8),
                 if (state.dupeGroups.isEmpty)
                   Text('no dupes found')
                 else
                   DupesBody(
-                    baseDir: state.dir,
+                    baseDirs: state.dirs,
                     dupeGroups: state.dupeGroups,
                     selectedDupeGroup: state.selectedDupeGroup,
                   ),
@@ -92,11 +138,19 @@ class DupeScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showSelectFolderDialog(BuildContext context, String? initialDir) async {
+  Future<void> _showSelectFolderDialog(
+    BuildContext context, {
+    Directory? initialDir,
+    required List<Directory> currentDirs,
+  }) async {
     final dir = await FileSelectorPlatform.instance
-        .getDirectoryPath(initialDirectory: initialDir ?? util.userHome, confirmButtonText: 'Select');
+        .getDirectoryPath(initialDirectory: initialDir?.path ?? util.userHome, confirmButtonText: 'Select');
     if (dir != null) {
-      BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirSelected(dir));
+      if (initialDir != null) {
+        currentDirs.remove(initialDir);
+      }
+      currentDirs.add(Directory(dir));
+      BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(currentDirs));
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupe_instance.dart';
 import 'package:flutter/material.dart';
@@ -5,12 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart' as path;
 
 class DupesBody extends StatelessWidget {
-  final String baseDir;
+  final List<Directory> baseDirs;
   final List<List<String>> dupeGroups;
   final int? selectedDupeGroup;
 
   const DupesBody({
-    required this.baseDir,
+    required this.baseDirs,
     required this.dupeGroups,
     this.selectedDupeGroup,
     super.key,
@@ -29,7 +31,7 @@ class DupesBody extends StatelessWidget {
                 dense: true,
                 visualDensity: VisualDensity(vertical: VisualDensity.minimumDensity),
                 minVerticalPadding: 0,
-                title: Text(path.relative(dupeGroups[index][0], from: baseDir)),
+                title: Text(path.relative(dupeGroups[index][0], from: _baseDirPathOf(dupeGroups[index][0], baseDirs))),
               ),
               itemCount: dupeGroups.length,
             ),
@@ -37,13 +39,16 @@ class DupesBody extends StatelessWidget {
           if (selectedDupeGroup != null) ...[
             VerticalDivider(thickness: 4),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) => DupeInstance(
-                  baseDir: baseDir,
-                  dupeGroup: dupeGroups[selectedDupeGroup!],
-                  index: index,
+              child: TooltipTheme(
+                data: TooltipThemeData(waitDuration: Duration.zero),
+                child: ListView.builder(
+                  itemBuilder: (context, index) => DupeInstance(
+                    baseDir: _baseDirPathOf(dupeGroups[selectedDupeGroup!][index], baseDirs),
+                    dupeGroup: dupeGroups[selectedDupeGroup!],
+                    index: index,
+                  ),
+                  itemCount: dupeGroups[selectedDupeGroup!].length,
                 ),
-                itemCount: dupeGroups[selectedDupeGroup!].length,
               ),
             ),
           ],
@@ -54,4 +59,13 @@ class DupesBody extends StatelessWidget {
 
   bool _isSelectedItem(List<List<String>> dupeGroups, int? selectedDupeGroup, int index) =>
       selectedDupeGroup != null && dupeGroups[index] == dupeGroups[selectedDupeGroup];
+
+  String _baseDirPathOf(String filename, List<Directory> baseDirs) {
+    for (final baseDir in baseDirs) {
+      if (filename.startsWith(baseDir.path)) {
+        return baseDir.path;
+      }
+    }
+    return '';
+  }
 }

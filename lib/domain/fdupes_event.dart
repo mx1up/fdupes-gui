@@ -27,10 +27,10 @@ class FdupesEventRenameDupeInstance extends FdupesEvent {
   FdupesEventRenameDupeInstance(this.filename, this.newFilename);
 }
 
-class FdupesEventDirSelected extends FdupesEvent {
-  final String dir;
+class FdupesEventDirsSelected extends FdupesEvent {
+  final List<Directory> dirs;
 
-  FdupesEventDirSelected(this.dir);
+  FdupesEventDirsSelected(this.dirs);
 }
 
 class FdupesEventDupeSelected extends FdupesEvent {

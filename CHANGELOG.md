@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 - 2025-04-13
+
+* support multiple input directories
+
 ## 0.2.2 2025-04-13
 
 * add windows support 
