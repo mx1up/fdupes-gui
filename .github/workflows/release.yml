@@ -52,7 +52,7 @@ jobs:
         run: |
           cd out
           zip -r fdupes_gui-${{ steps.release_info.outputs.version }}-windows.zip windows/*
-          tar cvfz fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.zip -C linux .
+          tar cvfz fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.tar.gz -C linux .
           zip -r fdupes_gui-${{ steps.release_info.outputs.version }}-macos.universal.zip macos/*
 
       - name: Release
