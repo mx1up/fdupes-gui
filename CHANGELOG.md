@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 - 2025-04-
+## 0.3.0 - 2025-04-13
 
 * support multiple input directories
 
