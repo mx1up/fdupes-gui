@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.2.1 - 2024-10-03
 
 * add locate fdupes button when fdupes binary is not found in path
