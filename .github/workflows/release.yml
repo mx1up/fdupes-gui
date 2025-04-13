@@ -14,6 +14,8 @@ jobs:
     name: Build on Windows
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v3
+
       - name: Extract version from tag
         id: release_info
         shell: bash
@@ -25,8 +27,6 @@ jobs:
           echo "notes<<EOF" >> $GITHUB_OUTPUT
           echo "$NOTES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-
-      - uses: actions/checkout@v3
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
