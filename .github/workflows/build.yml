@@ -1,13 +1,24 @@
-name: release builds
+name: build
 
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - 'release/*'
-
-permissions:
-  contents: write
+  workflow_call:
+    inputs:
+      build-windows:
+        required: false
+        type: boolean
+        default: true
+      build-linux:
+        required: false
+        type: boolean
+        default: true
+      build-macos:
+        required: false
+        type: boolean
+        default: true
+    outputs:
+      artifact-names:
+        description: "List of uploaded artifacts"
+        value: ${{ steps.set-artifacts.outputs.names }}
 
 env:
   FLUTTER_VERSION: 3.13.9
