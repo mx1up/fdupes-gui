@@ -51,9 +51,9 @@ jobs:
       - name: Create zip files with version
         run: |
           cd out
-          zip -r fdupes_gui-${{ steps.vars.outputs.version }}-windows.zip windows
-          zip -r fdupes_gui-${{ steps.vars.outputs.version }}-linux.x86_64.zip linux
-          zip -r fdupes_gui-${{ steps.vars.outputs.version }}-macos.universal.zip macos
+          zip -r fdupes_gui-${{ steps.release_info.outputs.version }}-windows.zip windows
+          zip -r fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.zip linux
+          zip -r fdupes_gui-${{ steps.release_info.outputs.version }}-macos.universal.zip macos
 
       - name: Release
         uses: softprops/action-gh-release@v2
