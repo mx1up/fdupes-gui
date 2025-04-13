@@ -179,6 +179,7 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
       }
     });
     stderr.addStream(stderrBC);
+    // each line contains the absolute path of a duplicate file
     List<String> lines = await process.stdout.transform(utf8.decoder).transform(const LineSplitter()).toList();
     lines.forEach((element) {
       print(element);
