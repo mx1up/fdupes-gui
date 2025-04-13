@@ -5,7 +5,9 @@ version: 0.2.1+3
 
 dependency_overrides:
   image:
-    path: ../../../source/hacking/github/image
+    git:
+      url: https://github.com/mx1up/image.git
+      ref: fix_add_frame_on_empty_image
 
 environment:
   sdk: ">=3.1.5 <4.0.0"
@@ -29,7 +31,9 @@ dev_dependencies:
 #  flutter_test:
 #    sdk: flutter
   flutter_launcher_icons:
-    path: ../../../source/hacking/github/flutter_launcher_icons
+    git:
+      url: https://github.com/mx1up/flutter_launcher_icons.git
+      ref: multi_res_ico
 
 flutter:
   uses-material-design: true

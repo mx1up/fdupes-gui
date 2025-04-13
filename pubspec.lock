@@ -193,9 +193,11 @@ packages:
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
-      path: "../../../source/hacking/github/flutter_launcher_icons"
-      relative: true
-    source: path
+      path: "."
+      ref: multi_res_ico
+      resolved-ref: "3a8a02159cb6d0d8d97bf25628408fa30dbbf356"
+      url: "https://github.com/mx1up/flutter_launcher_icons.git"
+    source: git
     version: "0.14.3"
   flutter_web_plugins:
     dependency: transitive
@@ -221,9 +223,11 @@ packages:
   image:
     dependency: "direct overridden"
     description:
-      path: "../../../source/hacking/github/image"
-      relative: true
-    source: path
+      path: "."
+      ref: fix_add_frame_on_empty_image
+      resolved-ref: "45eb06b9ead30e318a1bed6f2af174d579e96c62"
+      url: "https://github.com/mx1up/image.git"
+    source: git
     version: "4.5.4"
   js:
     dependency: transitive
