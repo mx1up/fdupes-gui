@@ -93,11 +93,14 @@ jobs:
         run: flutter pub get
 
       - name: Build macOS app
-        run: flutter build macos
+        run: |
+          flutter build macos
+          mkdir build/macos/Build/Products/Release/artifact
+          mv build/macos/Build/Products/Release/fdupes_gui.app build/macos/Build/Products/Release/artifact/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: build/macos/Build/Products/Release/fdupes_gui.app
+          path: build/macos/Build/Products/Release/artifact
 
