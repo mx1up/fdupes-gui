@@ -17,7 +17,7 @@ jobs:
       - name: Extract version from tag
         id: release_info
         run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
+          VERSION=${GITHUB_REF#refs/tags/release/}
           NOTES=$(awk "/^## $VERSION/ {flag=1; next} /^## / {if (flag) exit} flag" CHANGELOG.md)
           
           echo "version=$VERSION" >> $GITHUB_OUTPUT
