@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2 2025-04-13
+
+* add windows support 
+
 ## 0.2.1 - 2024-10-03
 
 * add locate fdupes button when fdupes binary is not found in path
