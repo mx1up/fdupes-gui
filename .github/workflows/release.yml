@@ -6,6 +6,9 @@ on:
     tags:
       - 'release/*'
 
+permissions:
+  contents: write
+
 env:
   FLUTTER_VERSION: 3.13.9
 
