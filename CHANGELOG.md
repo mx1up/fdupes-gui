@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0+1 - 2025-04-15
+
+* fix macos binary
+
 ## 0.3.0 - 2025-04-13
 
 * support multiple input directories
