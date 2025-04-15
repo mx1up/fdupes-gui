@@ -52,8 +52,8 @@ jobs:
         run: |
           cd out
           zip -r fdupes_gui-${{ steps.release_info.outputs.version }}-windows.zip windows/*
-          tar cvfz fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.tar.gz -C linux .
-          tar cvfz fdupes_gui-${{ steps.release_info.outputs.version }}-macos.universal.tar.gz -C macos .
+          mv linux/linux-build.tar.gz fdupes_gui-${{ steps.release_info.outputs.version }}-linux.x86_64.tar.gz
+          mv macos/macos-build.tar.gz fdupes_gui-${{ steps.release_info.outputs.version }}-macos.universal.tar.gz
 
       - name: Release
         uses: softprops/action-gh-release@v2
