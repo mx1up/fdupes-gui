@@ -1,7 +1,7 @@
 name: fdupes_gui
 description: fdupes front-end
 publish_to: 'none'
-version: 0.3.0+6
+version: 0.3.1+7
 
 dependency_overrides:
   image:

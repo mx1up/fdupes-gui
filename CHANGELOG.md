@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 - 2025-04-15
+
+* add about dialog with version info
+
 ## 0.3.0+1 - 2025-04-15
 
 * fix macos binary
