@@ -1,7 +1,7 @@
 name: fdupes_gui
 description: fdupes front-end
 publish_to: 'none'
-version: 0.3.0+6
+version: 0.3.1+7
 
 dependency_overrides:
   image:
@@ -17,6 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  package_info_plus: ^4.2.0
   process_run: ^0.13.2
   file_selector: ^1.0.1
   flutter_bloc: ^8.1.3
