@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
+import 'package:fdupes_gui/presentation/about_dialog.dart';
 import 'package:fdupes_gui/presentation/base_dirs.dart';
 import 'package:fdupes_gui/presentation/select_folder_dialog.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +21,6 @@ class DupesTopBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: BaseDirs(baseDirs: baseDirs),
-        ),
-        SizedBox(width: 8),
         Column(
           children: [
             Tooltip(
@@ -42,6 +39,17 @@ class DupesTopBar extends StatelessWidget {
               ),
             ),
           ],
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: BaseDirs(baseDirs: baseDirs),
+        ),
+        Tooltip(
+          message: 'Find duplicates',
+          child: ElevatedButton(
+            child: Icon(Icons.info_outline),
+            onPressed: () => showAboutDialoog(context),
+          ),
         ),
       ],
     );
