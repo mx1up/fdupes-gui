@@ -69,11 +69,14 @@ jobs:
       - name: Build Linux app
         run: flutter build linux --verbose
 
+      - name: Archive (preserve permissions)
+        run: tar cvfz linux-build.tar.gz -C build/linux/x64/release/bundle .
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: build/linux/x64/release/bundle
+          path: linux-build.tar.gz
 
   build-macos:
     name: Build on macOS
@@ -98,9 +101,12 @@ jobs:
           mkdir build/macos/Build/Products/Release/artifact
           mv build/macos/Build/Products/Release/fdupes_gui.app build/macos/Build/Products/Release/artifact/
 
+      - name: Archive (preserve permissions)
+        run: tar cvfz macos-build.tar.gz -C build/macos/Build/Products/Release/artifact .
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: build/macos/Build/Products/Release/artifact
+          path: macos-build.tar.gz
 
