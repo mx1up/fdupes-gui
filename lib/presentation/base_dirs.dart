@@ -29,13 +29,14 @@ class BaseDirs extends StatelessWidget {
                   ),
                   SizedBox(width: 8),
                   Text(dir.path),
-                  IconButton(
-                    icon: Icon(Icons.remove_circle),
-                    visualDensity: VisualDensity.compact,
-                    iconSize: 14,
-                    onPressed: () =>
-                        BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(baseDirs..remove(dir))),
-                  ),
+                  if (baseDirs.length != 1)
+                    IconButton(
+                      icon: Icon(Icons.remove_circle),
+                      visualDensity: VisualDensity.compact,
+                      iconSize: 14,
+                      onPressed: () =>
+                          BlocProvider.of<FdupesBloc>(context).add(FdupesEventDirsSelected(baseDirs..remove(dir))),
+                    ),
                 ]),
                 SizedBox(height: 8),
               ])
