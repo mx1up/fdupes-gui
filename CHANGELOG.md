@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2 - 2025-10
+
+* print app version on startup
+* show progress label during file scan
+
 ## 0.3.1 - 2025-04-15
 
 * add about dialog with version info
