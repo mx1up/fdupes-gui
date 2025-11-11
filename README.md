@@ -4,7 +4,7 @@ A graphical user interface front end for `fdupes` cli program.
 
 [Fdupes](https://github.com/adrianlopezroche/fdupes) is a program to detect duplicate files based on content in an efficient way. 
 
-![screenshot](gfx/screenshot.png)
+![screenshot](gfx/screenshot/screenshot_main.png)
 
 ## Getting Started
 
@@ -46,6 +46,14 @@ The following actions can be performed:
 ### Refresh
 
 Recalculates duplicates by pressing the 'Refresh' button top right.
+
+## Preferences
+
+![screenshot](gfx/screenshot/screenshot_prefs.png)
+
+* Skip empty files: uses the `--noempty` option. Empty files are not included in results.
+* Use cache: uses the `--cache` option. Builds a cache for faster results on next run.
+* Follow symlinks: uses `--symlinks` option.
 
 ## Config location
 
