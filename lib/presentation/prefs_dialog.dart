@@ -71,7 +71,11 @@ class _PreferencesDialogState extends State<PreferencesDialog> {
                 });
               }),
           SwitchListTile(
-              title: const Text('Follow symlinks'),
+              title: const Text(
+                'Follow symlinks',
+                softWrap: false,
+                overflow: TextOverflow.visible,
+              ),
               value: followSymlinks,
               onChanged: (value) {
                 setState(() {
