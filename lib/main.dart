@@ -6,6 +6,7 @@ import 'package:fdupes_gui/presentation/dupe_screen.dart';
 import 'package:fdupes_gui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MyBlocObserver extends BlocObserver {
   @override
@@ -33,7 +34,7 @@ class MyBlocObserver extends BlocObserver {
   }
 }
 
-void main(List<String> args) {
+Future<void> main(List<String> args) async {
   List<String>? initialDirsArg;
   if (args.length > 0) {
     initialDirsArg = args;
@@ -42,6 +43,10 @@ void main(List<String> args) {
   final initialDirs =
       initialDirsArg?.map((e) => Directory(e)).where((element) => element.existsSync()).map((e) => e.absolute).toList();
   print('valid initialDirs=$initialDirs');
+  WidgetsFlutterBinding.ensureInitialized();
+  final appInfo = await PackageInfo.fromPlatform();
+  print('app info: ${appInfo.appName} v${appInfo.version}(${appInfo.buildNumber})');
+
   Bloc.observer = MyBlocObserver();
 
   runApp(MyApp(initialDirs));

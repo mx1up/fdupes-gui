@@ -1,9 +1,10 @@
 name: fdupes_gui
 description: fdupes front-end
 publish_to: 'none'
-version: 0.3.1+7
+version: 0.3.2+8
 
 dependency_overrides:
+  # https://github.com/brendan-duncan/image/pull/732
   image:
     git:
       url: https://github.com/mx1up/image.git
