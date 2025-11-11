@@ -4,6 +4,7 @@ publish_to: 'none'
 version: 0.3.2+8
 
 dependency_overrides:
+  # https://github.com/brendan-duncan/image/pull/732
   image:
     git:
       url: https://github.com/mx1up/image.git
