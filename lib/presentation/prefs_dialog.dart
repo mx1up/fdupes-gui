@@ -22,6 +22,7 @@ class PreferencesDialog extends StatefulWidget {
 }
 
 class _PreferencesDialogState extends State<PreferencesDialog> {
+  /// use local state instead of directly accessing shared preferences since we write the settings asynchronously without waiting
   late bool skipEmpty;
   late bool useCache;
   late bool followSymlinks;
@@ -54,7 +55,7 @@ class _PreferencesDialogState extends State<PreferencesDialog> {
           SwitchListTile(
               title: const Text('Use cache'),
               subtitle: const Text('fdupes 2.3.0+', softWrap: false),
-              value: widget.sharedPreferences.getBool('usecache') ?? false,
+              value: useCache,
               onChanged: (value) {
                 setState(() {
                   useCache = value;
