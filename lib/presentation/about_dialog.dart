@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/link.dart';
 
-Future<void> showAboutDialoog(
+Future<void> showAppAboutDialog(
   BuildContext context,
 ) async {
   final appInfo = await PackageInfo.fromPlatform();

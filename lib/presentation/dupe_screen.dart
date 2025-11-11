@@ -2,22 +2,43 @@ import 'package:fdupes_gui/core/util.dart' as util;
 import 'package:fdupes_gui/domain/fdupes_bloc.dart';
 import 'package:fdupes_gui/presentation/dupes_body.dart';
 import 'package:fdupes_gui/presentation/dupes_top_bar.dart';
+import 'package:fdupes_gui/presentation/prefs_dialog.dart';
 import 'package:fdupes_gui/presentation/select_folder_dialog.dart';
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DupeScreen extends StatelessWidget {
+  final SharedPreferences sharedPreferences;
+
+  DupeScreen({super.key, required this.sharedPreferences});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FdupesBloc, FdupesState>(
       builder: (context, state) {
         if (state is FdupesStateInitial) {
-          return Center(
-            child: ElevatedButton(
-              child: Text('Select folder'),
-              onPressed: () => showSelectFolderDialog(context, initialDir: null, currentDirs: []),
-            ),
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              ElevatedButton(
+                child: Text('Select folder'),
+                onPressed: () => showSelectFolderDialog(context, initialDir: null, currentDirs: []),
+              ),
+              Positioned(
+                right: 16,
+                top: 16,
+                child: Tooltip(
+                  message: 'Preferences',
+                  child: ElevatedButton(
+                    child: Icon(Icons.settings),
+                    style: ElevatedButton.styleFrom(shape: CircleBorder()),
+                    onPressed: () => showPreferencesDialog(context, sharedPreferences),
+                  ),
+                ),
+              ),
+            ],
           );
         }
         if (state is FdupesStateFdupesNotFound) {
@@ -72,7 +93,10 @@ class DupeScreen extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: Column(
               children: <Widget>[
-                DupesTopBar(baseDirs: state.dirs),
+                DupesTopBar(
+                  baseDirs: state.dirs,
+                  sharedPreferences: sharedPreferences,
+                ),
                 SizedBox(height: 8),
                 if (state.dupeGroups.isEmpty)
                   Text('no dupes found')
