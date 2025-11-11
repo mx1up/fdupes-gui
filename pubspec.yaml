@@ -30,12 +30,13 @@ dependencies:
   shared_preferences: ^2.2.2
 
 dev_dependencies:
-#  flutter_test:
-#    sdk: flutter
-  flutter_launcher_icons:
-    git:
-      url: https://github.com/mx1up/flutter_launcher_icons.git
-      ref: multi_res_ico
+  flutter_test:
+    sdk: flutter
+  #  disable for now due to conflicting `path` dep with flutter_test
+#  flutter_launcher_icons:
+#    git:
+#      url: https://github.com/mx1up/flutter_launcher_icons.git
+#      ref: multi_res_ico
 
 flutter:
   uses-material-design: true
