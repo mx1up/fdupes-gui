@@ -14,8 +14,12 @@ part 'fdupes_state.dart';
 class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   final List<Directory>? initialDirs;
   String? fdupesLocation;
+  final SharedPreferences sharedPreferences;
 
-  FdupesBloc({this.initialDirs}) : super(FdupesStateInitial(initialDirs)) {
+  FdupesBloc({
+    this.initialDirs,
+    required this.sharedPreferences,
+  }) : super(FdupesStateInitial(initialDirs)) {
     on<FdupesEventCheckFdupesAvailability>(_onCheckFdupesAvailability);
     on<FdupesEventSelectFdupesLocation>(_onSelectFdupesLocation);
     on<FdupesEventDirsSelected>(_onDirsSelected);
@@ -62,8 +66,8 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
         return;
       }
       add(FdupesEventCheckFdupesAvailability());
-    }
-    else emit(FdupesStateFdupesNotFound(statusMsg: 'Not a valid fdupes binary.'));
+    } else
+      emit(FdupesStateFdupesNotFound(statusMsg: 'Not a valid fdupes binary.'));
   }
 
   Future<bool> validFdupesLocation(String path) async {
@@ -84,7 +88,14 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     if (s is FdupesStateResult) {
       emit(s.copyWith(loading: true));
     }
-    final dupes = await findDupes(event.dirs, emit: emit);
+    final skipEmpty = sharedPreferences.getBool('noempty') ?? false;
+    final useCache = sharedPreferences.getBool('usecache') ?? false;
+    final dupes = await findDupes(
+      event.dirs,
+      emit: emit,
+      skipEmpty: skipEmpty,
+      useCache: useCache,
+    );
 
     emit(FdupesStateResult(dirs: event.dirs, dupeGroups: dupes));
   }
@@ -156,10 +167,22 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     }
   }
 
-  Future<List<List<String>>> findDupes(List<Directory> dirs, {required Emitter<FdupesState> emit}) async {
+  Future<List<List<String>>> findDupes(
+    List<Directory> dirs, {
+    required Emitter<FdupesState> emit,
+    bool skipEmpty = false,
+    bool useCache = false,
+  }) async {
     print("finding dupes in dirs $dirs");
+    final args = [
+      '-r',
+      if (skipEmpty) '--noempty',
+      if (useCache) '--usecache',
+      ...dirs.map((d) => d.path),
+    ];
+    print('cmd line: $fdupesLocation $args');
+    Process process = await Process.start(fdupesLocation!, args);
     List<List<String>> dupes = [];
-    Process process = await Process.start(fdupesLocation!, ['-r', ...dirs.map((d) => d.path)]);
     // stdout.addStream(process.stdout);
     final regex = RegExp(r'\[(\d+)/(\d+)\]');
     final stderrBC = process.stderr.asBroadcastStream();

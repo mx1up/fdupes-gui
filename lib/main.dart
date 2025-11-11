@@ -7,6 +7,7 @@ import 'package:fdupes_gui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyBlocObserver extends BlocObserver {
   @override
@@ -49,18 +50,31 @@ Future<void> main(List<String> args) async {
 
   Bloc.observer = MyBlocObserver();
 
-  runApp(MyApp(initialDirs));
+  WidgetsFlutterBinding.ensureInitialized();
+  final sharedPreferences = await SharedPreferences.getInstance();
+
+  runApp(MyApp(
+    initialDirs,
+    sharedPreferences: sharedPreferences,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final List<Directory>? initialDirs;
+  final SharedPreferences sharedPreferences;
 
-  MyApp(this.initialDirs);
+  MyApp(
+    this.initialDirs, {
+    required this.sharedPreferences,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FdupesBloc>(
-      create: (context) => FdupesBloc(initialDirs: initialDirs),
+      create: (context) => FdupesBloc(
+        initialDirs: initialDirs,
+        sharedPreferences: sharedPreferences,
+      ),
       child: AdaptiveTheme(
         // debugShowFloatingThemeButton: true,
         light: FdupesTheme.light(),
@@ -70,7 +84,11 @@ class MyApp extends StatelessWidget {
           title: 'Fdupes gui',
           theme: theme,
           darkTheme: darkTheme,
-          home: Material(child: DupeScreen()),
+          home: Material(
+            child: DupeScreen(
+              sharedPreferences: sharedPreferences,
+            ),
+          ),
         ),
       ),
     );
