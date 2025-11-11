@@ -6,11 +6,10 @@ Future<void> showPreferencesDialog(
   SharedPreferences sharedPreferences,
 ) async {
   showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        return PreferencesDialog(sharedPreferences);
-      });
+    context: context,
+    barrierDismissible: true,
+    builder: (context) => PreferencesDialog(sharedPreferences),
+  );
 }
 
 class PreferencesDialog extends StatefulWidget {
