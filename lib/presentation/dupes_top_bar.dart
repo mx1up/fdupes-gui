@@ -45,7 +45,7 @@ class DupesTopBar extends StatelessWidget {
           child: BaseDirs(baseDirs: baseDirs),
         ),
         Tooltip(
-          message: 'Find duplicates',
+          message: 'About this app',
           child: ElevatedButton(
             child: Icon(Icons.info_outline),
             onPressed: () => showAppAboutDialog(context),
