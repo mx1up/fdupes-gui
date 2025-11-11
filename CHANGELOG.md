@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 - 2025-11-11
+
+* support --noempty and --cache cli option
+* added preferences screen
+
 ## 0.3.2 - 2025-11-11
 
 * print app version on startup
