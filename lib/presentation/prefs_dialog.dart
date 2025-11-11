@@ -37,7 +37,6 @@ class _PreferencesDialogState extends State<PreferencesDialog> {
     return AlertDialog(
       title: Text('Preferences'),
       content: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           SwitchListTile(
