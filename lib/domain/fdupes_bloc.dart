@@ -90,11 +90,13 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
     }
     final skipEmpty = sharedPreferences.getBool('noempty') ?? false;
     final useCache = sharedPreferences.getBool('usecache') ?? false;
+    final followSymlinks = sharedPreferences.getBool('followsymlinks') ?? false;
     final dupes = await findDupes(
       event.dirs,
       emit: emit,
       skipEmpty: skipEmpty,
       useCache: useCache,
+      followSymlinks: followSymlinks,
     );
 
     emit(FdupesStateResult(dirs: event.dirs, dupeGroups: dupes));
@@ -170,14 +172,16 @@ class FdupesBloc extends Bloc<FdupesEvent, FdupesState> {
   Future<List<List<String>>> findDupes(
     List<Directory> dirs, {
     required Emitter<FdupesState> emit,
-    bool skipEmpty = false,
-    bool useCache = false,
+    required bool skipEmpty,
+    required bool useCache,
+    required bool followSymlinks,
   }) async {
     print("finding dupes in dirs $dirs");
     final args = [
       '-r',
       if (skipEmpty) '--noempty',
       if (useCache) '--usecache',
+      if (followSymlinks) '--symlinks',
       ...dirs.map((d) => d.path),
     ];
     print('cmd line: $fdupesLocation $args');

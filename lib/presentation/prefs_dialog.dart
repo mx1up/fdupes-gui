@@ -24,12 +24,14 @@ class PreferencesDialog extends StatefulWidget {
 class _PreferencesDialogState extends State<PreferencesDialog> {
   late bool skipEmpty;
   late bool useCache;
+  late bool followSymlinks;
 
   @override
   void initState() {
     super.initState();
     skipEmpty = widget.sharedPreferences.getBool('noempty') ?? false;
     useCache = widget.sharedPreferences.getBool('usecache') ?? false;
+    followSymlinks = widget.sharedPreferences.getBool('followsymlinks') ?? false;
   }
 
   @override
@@ -57,6 +59,15 @@ class _PreferencesDialogState extends State<PreferencesDialog> {
                 setState(() {
                   useCache = value;
                   widget.sharedPreferences.setBool('usecache', value);
+                });
+              }),
+          SwitchListTile(
+              title: const Text('Follow symlinks'),
+              value: followSymlinks,
+              onChanged: (value) {
+                setState(() {
+                  followSymlinks = value;
+                  widget.sharedPreferences.setBool('followsymlinks', value);
                 });
               }),
         ],
