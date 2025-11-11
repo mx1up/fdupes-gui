@@ -1,7 +1,7 @@
 name: fdupes_gui
 description: fdupes front-end
 publish_to: 'none'
-version: 0.4.0+9
+version: 0.4.0+10
 
 dependency_overrides:
   # https://github.com/brendan-duncan/image/pull/732

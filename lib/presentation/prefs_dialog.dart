@@ -43,7 +43,11 @@ class _PreferencesDialogState extends State<PreferencesDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SwitchListTile(
-            title: const Text('Skip empty files', softWrap: false),
+            title: const Text(
+              'Skip empty files',
+              softWrap: false,
+              overflow: TextOverflow.visible,
+            ),
             value: skipEmpty,
             onChanged: (value) {
               setState(() {
@@ -54,7 +58,11 @@ class _PreferencesDialogState extends State<PreferencesDialog> {
           ),
           SwitchListTile(
               title: const Text('Use cache'),
-              subtitle: const Text('fdupes 2.3.0+', softWrap: false),
+              subtitle: const Text(
+                'fdupes 2.3.0+',
+                softWrap: false,
+                overflow: TextOverflow.visible,
+              ),
               value: useCache,
               onChanged: (value) {
                 setState(() {

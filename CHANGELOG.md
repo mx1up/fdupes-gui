@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0+1 - 2025-11-11
+
+* fix cut-off text in preferences dialog
+* updated documentation for new preferences
+
 ## 0.4.0 - 2025-11-11
 
 * support --noempty, --cache and --symlinks cli option
